@@ -1,0 +1,989 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BSS</name>
+    </assembly>
+    <members>
+        <member name="M:BSS.AJAXHelper.RenderControl``1(System.String,``0,System.String@)">
+            <summary>
+            RenderControl sang dạng html (text)
+            </summary>
+            <param name="path">Đường dẫn URL tới UserControl cần render</param>
+            <param name="properties">Các thuộc tính cho UserControl</param>
+            <param name="html">html content sau khi render UserControl</param>
+            <returns>Trả về xâu khác rỗng khi có lỗi, mô tả lỗi xảy ra</returns>
+        </member>
+        <member name="M:BSS.AJAXHelper.RenderControl``1(System.String,``0,System.String@,System.Boolean)">
+            <summary>
+            RenderControl sang dạng html (text)
+            </summary>
+            <param name="path">Đường dẫn URL tới UserControl cần render</param>
+            <param name="properties">Các thuộc tính cho UserControl</param>
+            <param name="html">html content sau khi render UserControl</param>
+            <param name="removeDivTag">Có xóa DivTag hay không</param>
+            <returns>Trả về xâu khác rỗng khi có lỗi, mô tả lỗi xảy ra</returns>
+        </member>
+        <member name="T:BSS.FuncSelectIDByGUID">
+            <summary>
+            Cache từ GUID sang ID
+            </summary>
+        </member>
+        <member name="M:BSS.Cache.CleanCache(System.Int32)">
+            <summary>
+            Xóa Cache
+            </summary>
+            <param name="threshold">Ngưỡng xóa: Nếu threshold nhỏ hơn 1: Clear Dictionary; Ngược lại: xóa các cache có Hit nhỏ hơn hoặc bằng threshold</param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.ClickOnceAutoUpdater.CheckForUpdate(System.Boolean)">
+            <author>
+            Bkav Corp. - [BPTHT]
+            Project: [BSS]
+            Create Date : [2015-12-23]
+            Author      : [CuongHMb]
+            </author>
+            <summary>
+            Hàm check update
+            </summary>
+            <param name="userClick">Tham số người dùng click trên tool hay tự update</param>
+        </member>
+        <member name="T:BSS.Common">
+            <summary>
+            Các hàm dùng chung
+            </summary>
+        </member>
+        <member name="M:BSS.Common.GetSetting(System.String,System.String@)">
+            <summary> Trả về setting trong app.config hay web.config
+            </summary>
+            <param name="key">Key</param>
+            <param name="value"></param>
+            <returns>Giá trị của Key trong app.config hoặc web.config. Trả về rỗng nếu không có Key hoặc lỗi</returns>
+        </member>
+        <member name="M:BSS.Common.CopyObjectPropertyData``2(``0,``1,System.String)">
+            <summary>
+            Copy value of same properties from obj1 to obj2
+            </summary>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+            <param name="obj1"></param>
+            <param name="obj2"></param>
+            <param name="exceptProperties">Properties which are not copied</param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.Common.DoEx(System.Linq.Expressions.Expression{System.Func{System.Object,System.String}})">
+            <summary> <para>Hàm chạy 1 Expression (biểu thức/câu lệnh). Nếu Expression chạy có lỗi (return string khác rỗng) thì sẽ ghép nội dung của Expression vào trước lỗi.
+            Nội dung của Expression sẽ bao gồm tên hàm được gọi (câu lệnh) và các tham số của hàm, cùng giá trị của các tham số này.</para>
+            <para>Ví dụ: string msg = Common.DoEx(i => DBM.ExecStore("sp_InvoiceRelease_Insert", o).ToGeneralSystemErrorMessage());</para>
+            nếu có lỗi sẽ trả về: ERROR AT [BSS.DBM.ExecStore(sp_InvoiceRelease_Insert; o = { IP = 1.2.3.4, UserName = ABC }).BSS.Log.ToGeneralSystemErrorMessage()]. ERROR CONTENT: Có lỗi xảy ra. Xin vui lòng thử lại sau hoặc thông báo với quản trị (#Error: Connection string is null or empty)
+            <para>Ví dụ khác: lấy 20 ký tự đầu của expression khi có lỗi: string msg = Common.DoEx(s20 => DBM.ExecStore("sp_InvoiceRelease_UpdateStatus", new { IP }));</para>
+            <para>Lấy đễn vị trí của "IP" trong expression khi có lỗi: string msg = Common.DoEx(fIP => DBM.ExecStore("sp_InvoiceRelease_UpdateStatus", new { IP }));</para>
+            </summary>
+        </member>
+        <member name="M:BSS.Common.ShowErrorPopup(System.String,System.Web.UI.UserControl,System.Int32)">
+            <summary>
+            Đăng ký 1 script ở page hoặc UserControl để hiển thị Popup thông báo lỗi (gọi hàm javascript bkav_alert_error)
+            </summary>
+            <param name="msg">Nội dung trong Popup thông báo lỗi</param>
+            <param name="userControl">Là UserControl chứa PU thông báo lỗi</param>
+            <param name="width"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.Common.RegisterScript(System.String,System.Object,System.String)">
+            <summary>
+            Đăng ký 1 script ở page hoặc UserControl để chạy 1 đoạn code javascript
+            </summary>
+            <param name="script">Đoạn code javascript</param>
+            <param name="id">Id của script</param>
+            <param name="o">Là page hay UserControl</param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.Common.ObjectToFile``1(``0,System.String)">
+            <summary>
+            Serializes an object.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <param name="fullPath"></param>
+        </member>
+        <member name="M:BSS.Common.FileToObject``1(System.String,``0@)">
+            <summary>
+            Deserializes an xml file into an object list
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="fullPath"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.Common.GetGGObject``1(``0,System.Int32,BSS.GGObject@)">
+            <summary>
+            returns string is error, GGObject is ok
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="parameters"></param>
+            <param name="objectType"></param>
+            <param name="ggObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.ImageChecker.RegisterImageHeaderSignature(System.String,System.String)">
+            <summary>
+                <para> Registers a hexadecimal value used for a given image type </para>
+                <param name="imageType"> The type of image, example: "png" </param>
+                <param name="uniqueHeaderAsHex"> The type of image, example: "89504E470D0A1A0A" </param>
+            </summary>
+        </member>
+        <member name="M:BSS.Convertor.ObjectToString``1(System.Boolean,``0,System.String@)">
+            <summary>
+            Convert object to string. String trong định dạng XML hoặc Json
+            </summary>
+            <param name="isXML">true: string trả về trong định dạng XML; false: string trả về trong định dạng Json</param>
+            <param name="objectData"></param>
+            <param name="value"></param>
+            <returns>string khác rỗng là lỗi</returns>
+        </member>
+        <member name="M:BSS.Convertor.StringToObject``1(System.Boolean,System.String,``0@)">
+            <summary>
+            Convert string to object. String trong định dạng XML hoặc Json
+            </summary>
+            <param name="isXML">true: string trong định dạng XML; false: string trong định dạng Json</param>
+            <param name="stringData"></param>
+            <param name="obj"></param>
+            <returns>string khác rỗng là lỗi</returns>
+        </member>
+        <member name="M:BSS.Convertor.ObjectToBase64String(System.Object,System.String@)">
+            <summary>
+            Serialize và chuyển sang Base64 1 object bất kỳ (object cần có thuộc tính Serializable)
+            </summary>
+            <param name="obj">object cần chuyển sang Base64</param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.Convertor.Base64StringToObject(System.String,System.Object@)">
+            <summary>
+            Deserialize từ Base64 về object 
+            </summary>
+            <param name="base64">Chuỗi cần chuyển về object</param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.Convertor.StringRemoveMarkVietnamese(System.String,System.Int32)">
+            <summary>
+            Chuyển string từ tiếng việt có dấu thành không dấu
+            </summary>
+            <param name="input">The input.</param>
+            <param name="type">0 thì binh thuong, 1 tolower, 2 To upper </param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.Convertor.HtmlToPlainText(System.String)">
+            <summary>
+            Bỏ các ký tự HTML sang plain text
+            </summary>
+            <param name="html"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.#cctor">
+            <summary>
+            Constructor: khởi tạo ConnectionString default (theo key AppSettingsDBKey = "MSSQL") để sử dụng cho các hàm tĩnh. Các hàm tĩnh khi được gọi không cần truyền ConnectionString
+            </summary>
+        </member>
+        <member name="M:BSS.DBM.#ctor">
+            <summary>
+            Constructor: tạo SqlConnection cho object DBM với ConnectionString được truyền vào
+            </summary>
+        </member>
+        <member name="M:BSS.DBM.#ctor(System.Data.SqlClient.SqlConnection)">
+            <summary>
+            Constructor: gán SqlConnection cho object DBM với SqlConnection được truyền vào
+            </summary>
+            <param name="SqlConn"></param>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String)">
+            <summary>
+            Hàm tĩnh, cho phép execute store storeName trong DB mà không cần khởi tạo object DBM, dùng default ConnectionString (được set trong key AppSettingsDBKey = "MSSQL" ở file app.config hoặc web.config)
+            </summary>
+            <param name="storeName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.String)">
+            <summary>
+            Hàm tĩnh, cho phép execute store storeName trong DB mà không cần khởi tạo object DBM, với connection string strConnect được truyền vào
+            </summary>
+            <param name="strConnect"></param>
+            <param name="storeName"></param>
+        </member>
+        <member name="M:BSS.DBM.ExecStore``1(System.String,``0)">
+            <summary>
+            Hàm tĩnh, cho phép execute store storeName trong DB, với tham số parameters mà không cần khởi tạo object DBM, dùng default ConnectionString (được set trong key AppSettingsDBKey = "MSSQL" ở file app.config hoặc web.config)
+            </summary>
+            <param name="storeName"></param>
+            <param name="parameters"></param>
+        </member>
+        <member name="M:BSS.DBM.ExecStore``1(System.String,System.String,``0)">
+            <summary>
+            Hàm tĩnh, cho phép execute store storeName trong DB, với tham số parameters mà không cần khởi tạo object DBM, với connection string strConnect được truyền vào
+            </summary>
+            <param name="strConnect"></param>
+            <param name="storeName"></param>
+            <param name="parameters"></param>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.String@)">
+            <summary>
+            ExecStore and return one output with type of string
+            </summary>
+            <param name="storeName"></param>
+            <param name="v"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.Int32@)">
+            <summary>
+            ExecStore and return one output with type of int
+            </summary>
+            <param name="storeName"></param>
+            <param name="v"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.Int64@)">
+            <summary>
+            ExecStore and return one output with type of long
+            </summary>
+            <param name="storeName"></param>
+            <param name="v"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.Boolean@)">
+            <summary>
+            ExecStore and return one output with type of bool
+            </summary>
+            <param name="storeName"></param>
+            <param name="v"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.Data.DataTable@)">
+            <summary>
+            ExecStore and return one output with type of DataTable
+            </summary>
+            <param name="storeName"></param>
+            <param name="dt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.Object@)">
+            <summary>
+            ExecStore and return one output with type of object
+            </summary>
+            <param name="storeName"></param>
+            <param name="v"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.String,System.Guid@)">
+            <summary>
+            ExecStore with storeName, params, out param outVarName and return one output with type of Guid
+            </summary>
+            <param name="storeName"></param>
+            <param name="outVarName"></param>
+            <param name="v"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.String,System.String@)">
+            <summary>
+            ExecStore with storeName, params, out param outVarName and return one output with type of string
+            </summary>
+            <param name="storeName"></param>
+            <param name="outVarName"></param>
+            <param name="v"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.String,System.Int32@)">
+            <summary>
+            ExecStore with storeName, params, out param outVarName and return one output with type of int
+            </summary>
+            <param name="storeName"></param>
+            <param name="outVarName"></param>
+            <param name="v"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.String,System.Int64@)">
+            <summary>
+            ExecStore with storeName, params, out param outVarName and return one output with type of long
+            </summary>
+            <param name="storeName"></param>
+            <param name="outVarName"></param>
+            <param name="v"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.String,System.Boolean@)">
+            <summary>
+            ExecStore with storeName, params, out param outVarName and return one output with type of bool
+            </summary>
+            <param name="storeName"></param>
+            <param name="outVarName"></param>
+            <param name="v"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.String,System.Object@)">
+            <summary>
+            ExecStore with storeName, params, out param outVarName and return one output with type of object
+            </summary>
+            <param name="storeName"></param>
+            <param name="outVarName"></param>
+            <param name="v"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.Object}@)">
+            <summary>
+            ExecStore with storeName, params, out param outVarName and return one output with type of object
+            </summary>
+            <param name="storeName"></param>
+            <param name="outVarNames"></param>
+            <param name="vs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.BulkCopy(System.String,System.Data.DataTable)">
+            <summary>
+            Ví dụ sử dụng:
+            
+            msg = GetInvoiceDetailsDataTable(ChangeTypeID, out DataTable dtInvoiceDetails);
+            if (msg.Length > 0) return msg;
+            
+            msg = DBM.BulkCopy(dbm, "dbo.InvoiceDetails", dtInvoiceDetails);
+            if (msg.Length > 0) return msg;
+            </summary>
+            <param name="DestinationTableName"></param>
+            <param name="dt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore">
+            <summary> Hàm thực thi các store sau khi chạy lệnh SetStoreNameAndParams để điền các tham số đầu vào và tên store cần thực thi
+            <para>BSS.DBM dbm = new BSS.DBM();</para>
+            <para>string err = dbm.SetStoreNameAndParams("dbo.sp_LogActivity_Insert", new { LogContent = "Enter log", UserID = 20, ObjectGUID = Guid.NewGuid(), IP = "10.3.4.43" }).ExecStore();</para>
+            </summary>
+            <returns>Giá trị trả về rỗng là thành công, còn khác rỗng là lỗi</returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.Object}@)">
+            <summary>
+            Hàm thực thi các store sau khi chạy lệnh SetStoreNameAndParams để điền các tham số đầu vào và tên store cần thực thi và có giá trị trả ra 
+            </summary>
+            <param name="outVarNames">Tên biến quy định là biến output trong store</param>
+            <param name="outValues">Biến sẽ được gán giá trị sau khi chạy</param>
+            <returns>Giá trị trả về rỗng là thành công, còn khác rỗng là lỗi</returns>
+        </member>
+        <member name="M:BSS.DBM.ExecStore(System.Data.DataTable@)">
+            <summary>
+            Hàm thực thi các store sau khi chạy lệnh SetStoreNameAndParams để điền các tham số đầu vào và tên store cần thực thi và có giá trị trả ra
+            BSS.DBM dbm = new BSS.DBM();
+            DataTable dt = null;
+            string err = obj.SetStoreNameAndParams("dbo.sp_LogActivity_SelectOne", new { ID = 1 });
+            err = ExecStore(out dt);
+            </summary>
+            <param name="dt">Table chứa giá trị sau khi chạy</param>
+            <returns>Giá trị trả về rỗng là thành công, còn khác rỗng là lỗi</returns>
+        </member>
+        <member name="M:BSS.DBM.SetStoreNameAndParams``1(System.String,``0)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="storeName"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ClearParams">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.AddParams``1(``0)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.AddParams``1(System.Collections.Hashtable@,``0)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="htParams"></param>
+            <param name="parameters"></param>
+        </member>
+        <member name="M:BSS.DBM.OpenConnection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BSS.DBM.CloseConnection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BSS.DBM.BeginTransac">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BSS.DBM.CommitTransac">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BSS.DBM.RollBackTransac">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:BSS.DBM.Dispose">
+            <summary>
+            Dispose object DBM
+            </summary>
+        </member>
+        <member name="M:BSS.DBM.ExecQueryString">
+            <summary>
+            Thực thi bằng câu lênh trực tiếp
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecQueryString(System.String)">
+            <summary>
+            Thực thi bằng câu lênh trực tiếp
+            </summary>       
+            <param name="_QueryString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.ExecQueryString(System.Data.SqlClient.SqlConnection,System.Data.SqlClient.SqlTransaction,System.String)">
+            <summary>
+            Thực thi bằng câu lênh trực tiếp
+            </summary>
+            <param name="_SqlConn"></param>
+            <param name="_SqlTransac"></param>
+            <param name="_QueryString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.GetOne``1(``0@)">
+            <summary>
+            Hàm để lấy một đối tượng sau khi chạy lệnh SetStoreNameAndParams để điền các tham số đầu vào và tên store cần thực thi và có giá trị trả ra
+            BSS.DBM dbm = new BSS.DBM();
+            T obj = null;
+            string err = obj.SetStoreNameAndParams("dbo.sp_LogActivity_SelectOne", new { ID = 1 }).ExecStore(out obj);
+            </summary>
+            <param name="oneItem">Đối tượng chứa giá trị sau khi chạy</param>
+            <returns>Giá trị trả về rỗng là thành công, còn khác rỗng là lỗi</returns>
+        </member>
+        <member name="M:BSS.DBM.GetList``1(System.Collections.Generic.List{``0}@)">
+            <summary>
+            Hàm để lấy danh sách đối tượng sau khi chạy lệnh SetStoreNameAndParams để điền các tham số đầu vào và tên store cần thực thi và có giá trị trả ra
+            BSS.DBM dbm = new BSS.DBM();
+            List lt = null;
+            string err = obj.SetStoreNameAndParams("dbo.sp_LogActivity_SelectOne", new { ID = 1 }).ExecStore(out lt);
+            </summary>
+            <param name="list">List chứa giá trị sau khi chạy</param>
+            <returns>Giá trị trả về rỗng là thành công, còn khác rỗng là lỗi</returns>
+        </member>
+        <member name="M:BSS.DBM.GetOne``2(System.String,``0,``1@)">
+            <summary>
+            Hàm tĩnh để lấy 1 đối tượng
+            LogActivity objLogActivity = null;
+            DataTable dt = null;
+            string err = DBM.GetOne("dbo.sp_LogActivity_SelectOne", new { ID = 5 }, out objLogActivity);
+            </summary>
+            <typeparam name="T">Kiểu đối tượng chứa biến</typeparam>
+            <typeparam name="TL">Kiểu đối tượng cần lấy</typeparam>
+            <param name="storeName">Tên store</param>
+            <param name="parameters">Đối tượng chứa biến chuyền vào</param>
+            <param name="oneItem">Đối tượng trả ra</param>
+            <returns>Giá trị trả về rỗng là thành công, còn khác rỗng là lỗi</returns>
+        </member>
+        <member name="M:BSS.DBM.GetList``2(System.String,``0,System.Collections.Generic.List{``1}@)">
+            <summary> 
+            Hàm tĩnh để lấy danh sách đối tượng
+            List clsLogActivity objListLogActivity = null;
+            DataTable dt = null;
+            string err = DBM.GetList("dbo.sp_LogActivity_SelectOne", new { ID = 5 }, out objListLogActivity); 
+            </summary>
+            <typeparam name="T">Kiểu đối tượng chứa biến</typeparam>
+            <typeparam name="TL">Kiểu đối tượng cần lấy</typeparam>
+            <param name="storeName">Tên store</param>
+            <param name="parameters">Đối tượng chứa biến chuyền vào</param>
+            <param name="list">Đối tượng trả ra</param>
+            <returns>Giá trị trả về rỗng là thành công, còn khác rỗng là lỗi</returns>
+        </member>
+        <member name="M:BSS.DBM.DataTableToList``1(System.Data.DataTable,System.Collections.Generic.List{``0}@)">
+            <summary>
+            Convert 1 DataTable to 1 list of objects
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="table"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DBM.RowToObject``1(System.Data.DataRow,``0@)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="row"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.DifferenceComparator.GetDifferences(System.Object,System.Object,System.String,System.String,System.Boolean)">
+            <summary>
+            So sánh sự khác nhau giữa 2 đối tượng dựa vào 1 tập các thuộc tính được chỉ định<para/>
+            Ví dụ: return BSS.DifferenceComparator.GetDifferences(o1, o2);<para/>
+            Ví dụ: return BSS.DifferenceComparator.GetDifferences(o1, o2, "Address|Mobile|Telephone|CompanyTelephone|Email");<para/>
+            Ví dụ: return BSS.DifferenceComparator.GetDifferences(o1, o2, "Address|Mobile@ -,;@SĐT DĐ|Telephone@ -,;@SĐT NR|CompanyTelephone@ -,;@SĐT CQ|Email");<para/>
+            Cú pháp "PropertyName1@DisplayText1@SplitString1|PropertyName2@DisplayText2@SplitString2|PropertyName3@DisplayText3@SplitString3"<para/>
+            Trong đó propertieNames là danh sách các Property có trong 2 object cần so sánh.
+            DisplayText là nội dung hiển thị nếu có sự khác biệt. Nếu DisplayText để rỗng thì DisplayText sẽ được set bằng PropertyName ví dụ nếu truyền vào "Mobile@@," thì PropertyName, DisplayText là "Mobile", SplitChar là ","
+            SplitString là các ký tự để phân tách (nếu có)<para/>
+            Ghi chú: DisplayText, SplitString có thể là rỗng, khi đó sẽ lấy từ DifferenceComparatorAttribute của Property (nếu có)
+            Nếu propertieNames="" hoặc không có, sẽ lấy toàn bộ propertieNames của o1
+            </summary>
+            <param name="o1"></param>
+            <param name="o2"></param>
+            <param name="propertieNames">Là danh sách các properties cần so sánh</param>
+            <param name="actionText"></param>
+            <param name="boldValue"></param> 
+            <returns></returns>
+        </member>
+        <member name="T:BSS.EnterpriseInfo">
+            <summary>
+            Class lấy thông tin doanh nghiệp từ https://dichvuthongtin.dkkd.gov.vn/inf/default.aspx hoặc Vacom.vn
+            Hướng dẫn sử dụng:
+            EnterpriseInfo ei;
+            EnterpriseInfo.GetEnterpriseInfo("0101360697", out ei);
+            </summary>
+        </member>
+        <member name="M:BSS.EnterpriseInfo.GetEnterpriseInfo(System.String,BSS.EnterpriseInfo@)">
+            <summary>
+            Hàm lấy TTDN: 
+            1. Nếu tồn tại trong DB và Lastupdate chưa vượt ngưỡng (7 ngày) => lấy thông tin trong DB
+            2. Ngược lại tra cứu thông tin từ các Website theo thứ tự ưu tiên: vinabiz.org, dichvuthongtin.dkkd.gov.vn
+            - Nếu đã tồn tại trong DB thì Set timeout = 5s => trả về thông tin từ WebSite nếu lấy thành công, ngược lại lấy trong DB
+            - Ko tồn tại trong DB Set timeout = 15s, trả về thông tin từ WebSite nếu lấy thành công, ngược lại thông báo lỗi NSD tự điền thông tin
+            </summary>
+            <param name="MST"></param>
+            <param name="ei"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.EnterpriseInfo.GetToken(System.Boolean,System.String@)">
+            <summary>
+            Hàm mấy token mỗi lần vào trang
+            </summary>
+            <param name="token">Token lấy được từ trang</param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.EnterpriseInfo.GetStatusName(System.String)">
+            <summary>
+            Trang sẽ trả về các mã ACT, TER, SUS, REV. Hàm này sẽ convert các mã về tên Trạng thái
+            </summary>
+            <param name="status">Mã trạng thái</param>
+            <returns></returns>
+        </member>
+        <member name="T:BSS.ListEnterpriseInfo">
+            <summary>
+            Class này tạo để khớp với cấu trúc JSON trang trả về từ https://dichvuthongtin.dkkd.gov.vn/inf/default.aspx
+            </summary>
+        </member>
+        <member name="T:BSS.TFormatter">
+            <summary>
+            Con trỏ hàm format
+            </summary>
+            <param name="o">Giá trị cần format</param>
+            <returns>Giá trị sau khi format</returns>
+        </member>
+        <member name="T:BSS.TSpecialFun">
+            <summary>
+            Con trỏ hàm kiểm tra các chức năng đặc biệt (Các chức năng hiển thị không chỉ dựa vào trạng thái + quyền)
+            </summary>
+            <param name="fId"></param>
+            <param name="roleId"></param>
+            <param name="param">danh sách tham số truyền qua con trỏ hàm</param>
+            <returns>True nếu có hiển thị ngược lại False</returns>
+        </member>
+        <member name="T:BSS.TColorClass">
+            <summary>
+            Con trỏ hàm hỗ trợ bôi màu
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:BSS.GridGenerator.dtRoleStatusFunctionTableView">
+            <summary>
+            Bảng chứa toàn bộ thông tin Chức năng tương ứng với: Quyền, trạng thái, bảng gg
+            </summary>
+        </member>
+        <member name="P:BSS.GridGenerator.dtColumnsTableView">
+            <summary>
+            Bảng chứa toàn bộ danh sách cột theo bảng gg
+            </summary>
+        </member>
+        <member name="P:BSS.GridGenerator.FileNameConfig">
+            <summary>
+            Đường dẫn file config
+            </summary>
+        </member>
+        <member name="P:BSS.GridGenerator.MD5Config">
+            <summary>
+            MD5 file config
+            </summary>
+        </member>
+        <member name="F:BSS.GridGenerator.formatters">
+            <summary>
+            Danh sách các con trỏ hàm format định nghĩa
+            </summary>
+        </member>
+        <member name="F:BSS.GridGenerator.specialFuns">
+            <summary>
+            Danh sách các con trỏ hàm hỗ trợ bôi màu
+            </summary>
+        </member>
+        <member name="F:BSS.GridGenerator.colorClasss">
+            <summary>
+            Danh sách các con trỏ bôi màu
+            </summary>
+        </member>
+        <member name="M:BSS.GridGenerator.SetParameters(System.String,System.String,System.Boolean)">
+            <summary>
+            SetParameters
+            </summary>
+            <param name="fileNameConfig"></param>
+            <param name="md5Config"></param>
+            <param name="isDebug"></param>
+        </member>
+        <member name="M:BSS.GridGenerator.AddFormatter(System.String,BSS.TFormatter)">
+            <summary>
+            Thêm format vào danh sách
+            </summary>
+            <param name="valueType"></param>
+            <param name="formatter"></param>
+        </member>
+        <member name="M:BSS.GridGenerator.GetFormatter(System.String)">
+            <summary>
+            Lấy ra format từ danh sách
+            </summary>
+            <param name="valueType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.AddSpecialFun(System.String,BSS.TSpecialFun)">
+            <summary>
+            Thêm hàm kiểm tra chức năng vào danh sách
+            </summary>
+            <param name="valueType"></param>
+            <param name="specialFun"></param>
+        </member>
+        <member name="M:BSS.GridGenerator.GetSpecialFun(System.String)">
+            <summary>
+            Lấy ra hàm kiểm tra chức năng từ danh sách
+            </summary>
+            <param name="valueType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.AddColorClass(System.Int32,BSS.TColorClass)">
+            <summary>
+            Thêm hàm hỗ trợ bôi màu
+            </summary>
+            <param name="tableViewId"></param>
+            <param name="colorClass"></param>
+        </member>
+        <member name="M:BSS.GridGenerator.GetColorClass(System.Int32)">
+            <summary>
+            Lấy ra hàm hỗ trợ bôi màu
+            </summary>
+            <param name="tableViewId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.ChangeTableWork">
+            <summary>
+            Đổi giá trị bảng
+            </summary>
+        </member>
+        <member name="M:BSS.GridGenerator.IsValidInit">
+            <summary>
+            Hàm kiểm tra Validate GG
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.GetGrid``1(System.Collections.Generic.IList{``0},System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.String,System.Int32,System.String[],BSS.XSSDefenseType)">
+            <summary>
+            Tạo gg theo kiểu 3: Truyền vào 1 IEnumerable
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.GetGrid(System.Data.DataTable,System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.String,System.Int32,System.String[],BSS.XSSDefenseType)">
+            <summary>
+            Tạo gg theo kiểu 2: Truyền vào 1 bảng
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.GetGrid``1(``0,System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.String,System.Int32,System.String[],BSS.XSSDefenseType)">
+            <summary>
+            Tạo gg theo kiểu 1: Truyền vào danh sách param thực thi store, id bảng gg
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.GetDataTable``1(``0,System.Int32,System.Data.DataTable@)">
+            <summary>
+            Hàm đọc dữ liệu bảng gg theo store
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="parameters"></param>
+            <param name="tableViewId"></param>
+            <param name="dt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.GenerateGrid(System.Data.DataTable,System.Int32,System.Int32,System.Int32,System.Int32,System.String,System.String,System.Int32,System.String[],BSS.XSSDefenseType)">
+            <summary>
+            Hàm tạo gg
+            </summary>
+            <param name="dt"></param>
+            <param name="tableViewId"></param>
+            <param name="roleId"></param>
+            <param name="pageSize"></param>
+            <param name="currentPage"></param>
+            <param name="sortCol"></param>
+            <param name="htmlHeader">Đoạn html header nếu có thay đổi header không dùng tự động tạo của gg</param>
+            <param name="totalRow_Input"></param>
+            <param name="ignoreColName">Danh sách các cột bỏ qua không tạo</param>
+            <param name="defenseType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.GenerateGridPagination(System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Tạo phân trang
+            </summary>
+            <param name="tableViewId"></param>
+            <param name="pageSize"></param>
+            <param name="totalRow"></param>
+            <param name="header"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.GenerateGridHeader(System.Data.DataRow,System.Int32,System.String)">
+            <summary>
+            Hàm tạo header
+            </summary>
+            <param name="dataRow"></param>
+            <param name="tableViewId"></param>
+            <param name="sortCol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.GetGridFunction(System.Object,System.Object,System.Object,System.Data.DataRow,System.Boolean)">
+            <summary>
+            Hàm tạo chức năng
+            </summary>
+            <param name="roleId">Id quyền</param>
+            <param name="statusId">Id trạng thái</param>
+            <param name="tableViewId">Id bẳng hiển thị</param>
+            <param name="drData"></param>
+            <param name="isChildForm"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.DoGenerateFunction(System.Data.DataRow[],System.Data.DataRow,System.Boolean,System.Int32)">
+            <summary>
+            Hàm góp các chức năng thành đoạn html
+            </summary>
+            <param name="arrRowFunction">Mảng chức các chức năng</param>
+            <param name="drData"></param>
+            <param name="isChildForm"></param>
+            <param name="roleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.GenerateFunction(System.Data.DataRow,System.Boolean)">
+            <summary>
+            Hàm tạo html theo từng chức năng
+            </summary>
+            <param name="rowFunction">Dòng chức năng</param>
+            <param name="isChildForm"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.DoReplaceParameter(System.String,System.Data.DataRow)">
+            <summary>
+            Hàm ghi đè các tham số truyền vào hàm chức năng dưới client
+            </summary>
+            <param name="htmlFunctions"></param>
+            <param name="dr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.GridGenerator.SortingAndPagingGrid(System.Data.DataTable,System.Int32,System.Int32,System.String)">
+            <summary>
+            Hàm sắp xếp, phân trang
+            </summary>
+            <param name="dt"></param>
+            <param name="pageSize"></param>
+            <param name="currentPage"></param>
+            <param name="sortCol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.Log.WriteHistoryLog(BSS.DBM,System.String,System.Guid,System.Int32,System.String,System.Int32)">
+            <summary>
+            Ghi log lịch sử của 1 Object theo ObjectGUID 
+            </summary>
+            <param name="dbm"></param>
+            <param name="LogContent"></param>
+            <param name="ObjectGUID"></param>
+            <param name="FuncId"></param>
+            <param name="UserID"></param>
+            <param name="IP"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.Log.WriteErrorLog(System.String,System.Int32,System.String,System.String,System.Int32)">
+            <summary> Dùng để ghi log, không cần ghi các biến dùng cho debug
+            <para>Example: Log.WriteErrorLog("Bi loi");</para>
+            </summary>
+            <returns>Giá trị trả về khi có lỗi là nội dung lỗi; khi không có lỗi là id của row trong bảng ứng với lỗi vừa được ghi lại</returns>
+        </member>
+        <member name="M:BSS.Log.WriteErrorLog``1(System.String,``0,System.Int32,System.String,System.String,System.Int32)">
+            <summary> Dùng để ghi log, đồng thời ghi cả các biến cần cho debug
+            <para>
+            Example: Log.WriteErrorLog("Bi loi", new { var1, var2, var3 });
+            Example: cần ghi exception: Log.WriteErrorLog("Bi loi", new { Exception=ex.ToString() });
+            Example: cần ghi exception và biến: Log.WriteErrorLog("Bi loi", new { var1, var2, var3, Exception=ex.ToString() });</para>
+            </summary>
+            <returns>Giá trị trả về khi có lỗi là nội dung lỗi; khi không có lỗi là id của row trong bảng ứng với lỗi vừa được ghi lại</returns>
+        </member>
+        <member name="F:BSS.Log.FirstQuotes">
+            <summary> Trả về thông báo lỗi
+            <para>Example: Log.WriteErrorLog("Bi loi", new { var1, var2, var3, Exception=ex.ToString() }).ToMessage();
+                  Sẽ trả về nội dung "Có lỗi xảy ra. Xin vui lòng thử lại sau hoặc thông báo với quản trị (#130)" </para>
+            <para>Example: Log.WriteErrorLog("Bi loi", new { var1 }).ToMessage("Thông báo lỗi: ");
+                  Sẽ trả về nội dung "Thông báo lỗi: (#130)" </para>
+            </summary>
+        </member>
+        <member name="M:BSS.Log.ProcessError(System.String,System.Web.UI.Page,System.String,System.Int32,System.Boolean,System.String,System.String,System.Int32)">
+            <summary>
+            ProcessError và DoProcessError: Hàm xử lý lỗi trả về sau các lệnh dạng: 
+                msg = DoSomething(Input1, Input2... out Output);
+                ProcessError(msg);
+            Cách gọi tương đương 2 lệnh trên: msg = DoSomething(Input1, Input2... out Output).DoProcessError();
+            Nếu cần ghi thêm các tham số như UserID, IP: msg = DoSomething(Input1, Input2... out Output).DoProcessError(new { UserID, IP });
+            Nếu muốn hiện PU thông báo lỗi: msg = DoSomething(Input1, Input2... out Output).DoProcessError(this);
+            Nếu muốn chống bruteforce: msg = DoSomething(Input1, Input2... out Output).DoProcessError(IP: Request.UserHostAddress);
+            Có thể kết hợp: msg = DoSomething(Input1, Input2... out Output).DoProcessError(new { UserID, IP }, this, IP: Request.UserHostAddress);
+            
+            Có 2 loại lỗi khi thực hiện 1 hàm (như hàm DoSomething ở trên): 
+                E1. Lỗi khi thực hiện các lệnh của chương trình, liên quan tới hệ thống: vd Exception khi query DB, thao tác file/folder, try... catch... Lỗi loại này chỉ cần thông báo chung chung cho user: "Có lỗi xảy ra. Xin vui lòng thử lại sau hoặc thông báo với quản trị" kèm theo ID log lỗi chi tiết đã được ghi lại trong DB
+                E2. Lỗi do input của user không hợp lệ khi validate: vd SĐT, email không đúng khuôn dạng, không nhập Username, cấp số Hóa đơn trong dải số đã hết số có thể cấp... Lỗi loại này cần thông báo cho user biết chi tiết lỗi (lỗi do gì, do vi phạm validate nào...)
+            Trong DoSomething, có thể xảy ra 1 trong 2 loại lỗi trên. 
+                - Với loại lỗi E1: trả về lỗi theo dạng if (msg.Length > 0) return msg;
+                - Với loại lỗi E2: trả về lỗi theo dạng return "Nội dung hiển thị cho user ở client".ToMessageForUser();
+            Sau khi gọi DoSomething, nhận về 1 string msg. Gọi Log.ProcessError(msg) để xử lý lỗi này.
+            ProcessError trả về string là nội dung sẽ hiển thị cho user để hàm gọi xử lý tiếp nếu cần (vd có thể gán lblWarning.Text = messageToUser nếu không hiện Popup thông báo lỗi). 
+            Ghi chú: các store SQL cũng áp dụng được, ví dụ:
+               SET @OutMsg = N'[MessageForUser] Dải số đã hết. Bạn không thể cấp số Hoá đơn này'
+               SELECT @OutMsg AS OutMsg
+               RETURN ;
+            </summary>
+            <param name="msg"></param>
+            <param name="page">Là Page hay UserControl để hiển thị nội dung thông báo lỗi dưới client. Null: không cần hiển thị ở client</param>
+            <param name="IP">Là IP của user. Nếu cần chống bruteforce thì truyền IP khác null vào. Nếu lỗi loại E2 (do user gây ra) và IP khác null/rỗng thì add vào BruteForceGuard</param>
+            <param name="width"></param>
+            <param name="IsPartner">Tham số xác định có phải là Partner của Bkav không để áp dụng số lần sai trong luật BruteForce</param>
+            <param name="memberName"></param>
+            <param name="sourceFilePath"></param>
+            <param name="sourceLineNumber"></param>
+        </member>
+        <member name="M:BSS.Log.DoProcessError``1(System.String,``0,System.Web.UI.Page,System.String,System.Int32,System.Boolean,System.String,System.String,System.Int32)">
+            <summary>
+            ProcessError và DoProcessError: Hàm xử lý lỗi trả về sau các lệnh dạng: 
+                msg = DoSomething(Input1, Input2... out Output);
+                ProcessError(msg);
+            Cách gọi tương đương 2 lệnh trên: msg = DoSomething(Input1, Input2... out Output).DoProcessError();
+            Nếu cần ghi thêm các tham số như UserID, IP: msg = DoSomething(Input1, Input2... out Output).DoProcessError(new { UserID, IP });
+            Nếu muốn hiện PU thông báo lỗi: msg = DoSomething(Input1, Input2... out Output).DoProcessError(this);
+            Nếu muốn chống bruteforce: msg = DoSomething(Input1, Input2... out Output).DoProcessError(IP: Request.UserHostAddress);
+            Có thể kết hợp: msg = DoSomething(Input1, Input2... out Output).DoProcessError(new { UserID, IP }, this, IP: Request.UserHostAddress);
+            
+            Có 2 loại lỗi khi thực hiện 1 hàm (như hàm DoSomething ở trên): 
+                E1. Lỗi khi thực hiện các lệnh của chương trình, liên quan tới hệ thống: vd Exception khi query DB, thao tác file/folder, try... catch... Lỗi loại này chỉ cần thông báo chung chung cho user: "Có lỗi xảy ra. Xin vui lòng thử lại sau hoặc thông báo với quản trị" kèm theo ID log lỗi chi tiết đã được ghi lại trong DB
+                E2. Lỗi do input của user không hợp lệ khi validate: vd SĐT, email không đúng khuôn dạng, không nhập Username, cấp số Hóa đơn trong dải số đã hết số có thể cấp... Lỗi loại này cần thông báo cho user biết chi tiết lỗi (lỗi do gì, do vi phạm validate nào...)
+            Trong DoSomething, có thể xảy ra 1 trong 2 loại lỗi trên. 
+                - Với loại lỗi E1: trả về lỗi theo dạng if (msg.Length > 0) return msg;
+                - Với loại lỗi E2: trả về lỗi theo dạng return "Nội dung hiển thị cho user ở client".ToMessageForUser();
+            Sau khi gọi DoSomething, nhận về 1 string msg. Gọi Log.ProcessError(msg) để xử lý lỗi này.
+            ProcessError trả về string là nội dung sẽ hiển thị cho user để hàm gọi xử lý tiếp nếu cần (vd có thể gán lblWarning.Text = messageToUser nếu không hiện Popup thông báo lỗi). 
+            Ghi chú: các store SQL cũng áp dụng được, ví dụ:
+               SET @OutMsg = N'[MessageForUser] Dải số đã hết. Bạn không thể cấp số Hoá đơn này'
+               SELECT @OutMsg AS OutMsg
+               RETURN ;
+            </summary>
+            <param name="msg"></param>
+            <param name="parameters">Các tham số cần ghi log</param>
+            <param name="page">Là Page hay UserControl để hiển thị nội dung thông báo lỗi dưới client. Null: không cần hiển thị ở client</param>
+            <param name="IP">Là IP của user. Nếu cần chống bruteforce thì truyền IP khác null vào. Nếu lỗi loại E2 (do user gây ra) và IP khác null/rỗng thì add vào BruteForceGuard</param>
+            <param name="width"></param>
+            <param name="memberName"></param>
+            <param name="sourceFilePath"></param>
+            <param name="sourceLineNumber"></param>
+        </member>
+        <member name="M:BSS.DataValidator.DataValidator.Validate``1(``0,System.String[])">
+            <summary>
+            Validate các public properties trong object obj
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <param name="mapProperties">Nếu là rỗng: Validate hết các public properties trong object obj.
+            Nếu khác rỗng: Nếu mapProperties[i] có dạng "MST" thì sẽ KHÔNG validate property MST này
+            Nếu khác rỗng: Nếu mapProperties[i] có dạng "MST|Mã số thuế" thì sẽ CÓ validate property MST và text trong kết quả khi có lỗi sẽ là "Mã số thuế" (thay vì MST)
+            Ví dụ:
+            textBox1.Text = DataValidator.Validate(new { MST = txtData.Text, HoTen = txtData.Text, Mobile = txtData.Text }).ToErrorMessage();
+            textBox1.Text = DataValidator.Validate(new { MST = txtData.Text, HoTen = txtData.Text, Mobile = txtData.Text },"MST").ToErrorMessage();
+            textBox1.Text = DataValidator.Validate(new { MST = txtData.Text, HoTen = txtData.Text, Mobile = txtData.Text },"MST|Mã số thuế").ToErrorMessage();
+            </param>
+            <returns></returns>
+        </member>
+        <member name="T:BSS.Result">
+            <summary>
+            <para>Class Result chứa kết quả trả về, dùng cho giao tiếp giữa các hệ thống, giữa Webservice-Client</para>
+            <para>Khi trả về KQ ok, không lỗi: return Result.ResultOk;</para>
+            <para>Khi trả về KQ ok, kèm theo object kết quả: return html.ToResultOk();</para>
+            <para>Khi trả về KQ có lỗi: return Result.GetResultError("object is null");</para>
+            <para>Khi trả về KQ có lỗi, cách 2: return BSS.Log.WriteErrorLog(msg).ToGeneralSystemErrorMessage().ToResultError();</para>
+            <para>Trả về 1 KQ customize: return Result.GetResult(2, url); // Trong đó 2 là Mã tự quy định để trao đổi giữa 2 bên; url là 1 object trả về ứng với Mã</para>
+            <para>Trả về 1 KQ customize, cách 2: return url.ToResult(2); </para>
+            <para>Nếu cần chuyển sang Base64 object: return Result.GetResult(3, myData, true); </para>
+            </summary>
+        </member>
+        <member name="M:BSS.XSSDefense.XSSKiller``1(``0,BSS.XSSDefenseType)">
+            <summary>
+            Chống tấn công xss theo đối tượng (Tự động Encode html nếu thuộc tính của đối tượng là string)
+            Các đối tượng trước khi bind ra giao diện cho người dùng chạy qua hàm này sẽ loại bỏ nguy cơ bị xss.
+            </summary>
+            <param name="obj"></param>
+            <param name="defenseType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BSS.XSSDefense.XSSKiller(System.String,BSS.XSSDefenseType)">
+            <summary>
+            Mã hóa các ký tự html chống tấn công xss
+            </summary>
+            <param name="val"></param>
+            <param name="defenseType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BSECUS.Webservice.BSECUSWebservice">
+            <summary>
+            Summary description for WSPublicEHoaDon
+            </summary>
+        </member>
+        <member name="T:EMS.EMSTrackTrace">
+            <summary>
+            Class lấy thông tin chuyển phát của đơn hàng
+            HDSD:
+            string result;
+            EMSTrackTrace ett = new EMSTrackTrace();
+            ett.GetTrackTrace("EO139985595VN",out result );
+            </summary>
+        </member>
+        <member name="M:EMS.EMSTrackTrace.GetTrackTrace(System.String,System.String@)">
+            <summary>
+            Hàm lấy thông tin chuyển phát
+            </summary>
+            <param name="billId">Mã đơn hàng</param>
+            <param name="result">Table HTML chứa thông tin chuyển phát</param>
+            <returns></returns>
+        </member>
+        <member name="T:BMM.Service.SPVService">
+            <summary>
+            Summary description for SPVServiceTest
+            </summary>
+        </member>
+    </members>
+</doc>
