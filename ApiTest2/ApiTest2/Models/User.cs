@@ -10,37 +10,62 @@ namespace ApiTest2.Models
     {
         public int UserID { get; set; }
         public string UserName { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
         public string Name { get; set; }
         public string GioiTinh { get; set; }
         public int IDPhongban { get; set; }
         public int IDChucVu { get; set; }
+        public int IDDonVi { get; set; }
         public DateTime Birthday { get; set; }
         public string Email { get; set; }
         public string NumberPhone { get; set; }
         public int UserUpdate { get; set; }
         public Guid ObjectGUID { get; set; }
 
-        public string Insert(BSS.DBM dbm)
+        public static string GetAllUser(out List<User> lstuser)
+        {
+            return DBM.GetList("usp_User_GetAll", new { }, out lstuser);
+        }
+        public string InsertorUpdate(BSS.DBM dbm)
         {
             string msg = "";
-            msg = dbm.SetStoreNameAndParams("usp_User_Insert", new
+            msg = dbm.SetStoreNameAndParams("usp_User_InsertorUpdate", new
             {
+                UserID,
                 UserName,
                 Name,
+                PasswordHash,
+                PasswordSalt,
                 GioiTinh,
                 IDPhongban,
                 IDChucVu,
+                IDDonVi,
                 Birthday,
                 Email,
                 NumberPhone,
                 UserUpdate
             });
+
             if (msg.Length > 0) return msg;
 
             msg = dbm.ExecStore();
             return msg;
         }
-        public static string GetOne(int ID, out User user)
+        public static string GetOneUserByUserName(string UserName, out User user)
+        {
+            string msg = "";
+            //using (BSS.DBM dbm = new DBM())
+            //{
+            //    dbm.SetStoreNameAndParams("usp_tbl_DocumentCCS_GetOne", new { Document_Id });
+            //    msg = dbm.GetOne(out documentCCS);
+            //    return msg;
+            //}
+            msg = DBM.GetOne("usp_User_GetOneByUserName", new { UserName }, out user);
+            if (msg.Length > 0) return msg;
+            return msg;
+        }
+        public static string GetOneUserByID(int ID, out User user)
         {
             string msg = "";
             //using (BSS.DBM dbm = new DBM())
@@ -54,26 +79,29 @@ namespace ApiTest2.Models
             return msg;
         }
 
-        public string Update(BSS.DBM dbm)
-        {
-            string msg = "";
-            msg = dbm.SetStoreNameAndParams("usp_User_Update", new
-            {
-                UserID,
-                UserName,
-                Name,
-                GioiTinh,
-                IDPhongban,
-                IDChucVu,
-                Birthday,
-                Email,
-                NumberPhone
-            });
-            if (msg.Length > 0) return msg;
+        //public string Update(BSS.DBM dbm)
+        //{
+        //    string msg = "";
+        //    msg = dbm.SetStoreNameAndParams("usp_User_Update", new
+        //    {
+        //        UserID,
+        //        UserName,
+        //        PasswordHash,
+        //        PasswordSalt,
+        //        Name,
+        //        GioiTinh,
+        //        IDPhongban,
+        //        IDChucVu,
+        //        IDDonVi,
+        //        Birthday,
+        //        Email,
+        //        NumberPhone
+        //    });
+        //    if (msg.Length > 0) return msg;
 
-            msg = dbm.ExecStore();
-            return msg;
-        }
+        //    msg = dbm.ExecStore();
+        //    return msg;
+        //}
 
         public string Delete(BSS.DBM dbm)
         {

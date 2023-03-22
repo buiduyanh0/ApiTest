@@ -9,26 +9,34 @@ namespace ApiTest2.Models
     public class PhongBan
     {
         public int IDPhongBan { get; set; }
-        public string TenPhongban { get; set; }
+        public string TenPhongBan { get; set; }
         public long MaPhongBan { get; set; }
         public int IDPhongBanChinh { get; set; }
-        public Guid objectGUID { get; set; }
+        public Guid ObjectGUID { get; set; }
+        public int UserUpdate { get; set; }
 
-        public string Insert(BSS.DBM dbm)
+        public static string GetAllPhongBan(out List<PhongBan> lstphongban)
+        {
+            return DBM.GetList("usp_PhongBan_GetAll", new { }, out lstphongban);
+        }
+        public string InsertorUpdate(BSS.DBM dbm)
         {
             string msg = "";
-            msg = dbm.SetStoreNameAndParams("usp_PhongBan_Insert", new
+
+            msg = dbm.SetStoreNameAndParams("usp_PhongBan_InsertorUpdate", new
             {
-                TenPhongban,
+                IDPhongBan,
+                TenPhongBan,
                 MaPhongBan,
-                IDPhongBanChinh
+                IDPhongBanChinh,
+                UserUpdate
             });
             if (msg.Length > 0) return msg;
 
             msg = dbm.ExecStore();
             return msg;
         }
-        public static string GetOne(int IDPhongBan, out PhongBan phongBan)
+        public static string GetOnePhongBanByID(int IDPhongBan, out PhongBan phongBan)
         {
             string msg = "";
             //using (BSS.DBM dbm = new DBM())
@@ -37,16 +45,17 @@ namespace ApiTest2.Models
             //    msg = dbm.GetOne(out documentCCS);
             //    return msg;
             //}
-            msg = DBM.GetOne("usp_ChucVu_GetOne", new { IDPhongBan }, out phongBan);
+            msg = DBM.GetOne("usp_PhongBan_GetOne", new { IDPhongBan }, out phongBan);
             if (msg.Length > 0) return msg;
             return msg;
         }
         public string Update(BSS.DBM dbm)
         {
             string msg = "";
-            msg = dbm.SetStoreNameAndParams("usp_ChucVu_Update", new
+            msg = dbm.SetStoreNameAndParams("usp_PhongBan_Update", new
             {
-                TenPhongban,
+                IDPhongBan,
+                TenPhongBan,
                 MaPhongBan,
                 IDPhongBanChinh
             });
@@ -59,7 +68,7 @@ namespace ApiTest2.Models
         public string Delete(BSS.DBM dbm)
         {
             string msg = "";
-            msg = dbm.SetStoreNameAndParams("usp_ChucVu_Delete", new { IDPhongBan });
+            msg = dbm.SetStoreNameAndParams("usp_PhongBan_Delete", new { IDPhongBan });
             if (msg.Length > 0) return msg;
 
             msg = dbm.ExecStore();
