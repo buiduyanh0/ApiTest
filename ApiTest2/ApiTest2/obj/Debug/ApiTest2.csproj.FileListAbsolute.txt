@@ -173,3 +173,7 @@ S:\ApiTest2\ApiTest2\ApiTest2\bin\MySql.Data.xml
 S:\ApiTest2\ApiTest2\ApiTest2\obj\Debug\ApiTest2.csproj.AssemblyReference.cache
 S:\ApiTest2\ApiTest2\ApiTest2\bin\Serilog.dll
 S:\ApiTest2\ApiTest2\ApiTest2\bin\Serilog.xml
+D:\Working\ApiTest2\ApiTest2\ApiTest2\obj\Debug\ApiTest2.csproj.AssemblyReference.cache
+D:\Working\ApiTest2\ApiTest2\ApiTest2\obj\Debug\ApiTest2.csproj.CoreCompileInputs.cache
+D:\Working\ApiTest2\ApiTest2\ApiTest2\obj\Debug\ApiTest2.dll
+D:\Working\ApiTest2\ApiTest2\ApiTest2\obj\Debug\ApiTest2.pdb

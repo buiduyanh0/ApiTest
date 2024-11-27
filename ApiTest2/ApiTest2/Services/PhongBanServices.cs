@@ -9,7 +9,7 @@ namespace ApiTest2.Services
 {
     public class PhongBanServices
     {
-        public static string DoDelete(DBM dbm, int id, PhongBan phongban)
+        public static string DoDelete(DBM dbm, int id, Class phongban)
         {
             string msg = phongban.Delete(dbm);
             if (msg.Length > 0) return msg;
@@ -25,9 +25,9 @@ namespace ApiTest2.Services
             public long MaPhongBan { get; set; }
             public int IDPhongBanChinh { get; set; }
         }
-        public static string InsertorUpdateToDB(int id, PhongBanAddorUpdateInfo oClientRequestInfo, out PhongBan phongban)
+        public static string InsertorUpdateToDB(int id, PhongBanAddorUpdateInfo oClientRequestInfo, out Class phongban)
         {
-            phongban = new PhongBan
+            phongban = new Class
             {
                 IDPhongBan = id,
                 TenPhongBan = oClientRequestInfo.TenPhongban,

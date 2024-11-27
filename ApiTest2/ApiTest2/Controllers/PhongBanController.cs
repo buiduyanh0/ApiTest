@@ -20,7 +20,7 @@ namespace ApiTest2.Controllers
         [Route("")]
         public Result GetList()
         {
-            string msg = PhongBan.GetAllPhongBan(out List<PhongBan> lstphongban);
+            string msg = Class.GetAllPhongBan(out List<Class> lstphongban);
             if (msg.Length > 0) return msg.ToMNFResultError("GetAllPhongBan");
 
             return lstphongban.ToResultOk();
@@ -32,7 +32,7 @@ namespace ApiTest2.Controllers
         [Route("{id:int}")]
         public Result GetOnePhongBan(int id)
         {
-            string msg = ApiTest2.Models.PhongBan.GetOnePhongBanByID(id, out PhongBan phongban);
+            string msg = ApiTest2.Models.Class.GetOnePhongBanByID(id, out Class phongban);
             if (msg.Length > 0) msg.ToMNFResultError("GetOnePhongBanByID", new { id });
 
             return phongban.ToResultOk();
@@ -45,7 +45,7 @@ namespace ApiTest2.Controllers
         [Route("edit/{id:int}")]
         public Result PhongBanAddorUpdate(int id, PhongBanServices.PhongBanAddorUpdateInfo oClientRequestInfo)
         {
-            string msg = PhongBanServices.InsertorUpdateToDB(id, oClientRequestInfo, out PhongBan phongban);
+            string msg = PhongBanServices.InsertorUpdateToDB(id, oClientRequestInfo, out Class phongban);
             if (msg.Length > 0) return msg.ToMNFResultError("InsertToDB", new { oClientRequestInfo });
 
             return phongban.ToResultOk();
@@ -69,7 +69,7 @@ namespace ApiTest2.Controllers
         [Route("delete/{id:int}")]
         public Result PhongBanDelete(int id)
         {
-            string msg = PhongBan.GetOnePhongBanByID(id, out PhongBan phongban);
+            string msg = Class.GetOnePhongBanByID(id, out Class phongban);
             if (msg.Length > 0) msg.ToMNFResultError("GetOnePhongBanByID", new { id });
 
             BSS.DBM dbm = new BSS.DBM();

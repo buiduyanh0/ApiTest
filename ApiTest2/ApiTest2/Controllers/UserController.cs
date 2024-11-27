@@ -20,10 +20,10 @@ namespace ApiTest2.Controllers
         [Route("login")]
         public Result Login(UserServices.UserLoginInfo oClientRequestInfo)
         {
-            string msg = UserServices.CheckLogin(oClientRequestInfo, out User user);
+            string msg = UserServices.CheckLogin(oClientRequestInfo, out string token);
             if (msg.Length > 0) return msg.ToResultError();
 
-            return user.ToResultOk();
+            return Result.GetResult(200, token);
         }
         #endregion
         #region lấy dữ liệu người dùng

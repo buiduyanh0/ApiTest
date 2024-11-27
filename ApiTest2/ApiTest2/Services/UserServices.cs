@@ -2,7 +2,11 @@
 using BSS;
 using System;
 using System.Collections.Generic;
+using Microsoft.IdentityModel.Tokens;
+using System.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
@@ -16,16 +20,20 @@ namespace ApiTest2.Services
             public string UserName { get; set; }
             public string pwd { get; set; }
         }
-        public static string CheckLogin(UserLoginInfo oClientRequestInfo, out User user)
+        public static string CheckLogin(UserLoginInfo oClientRequestInfo, out string token)
         {
-            string msg = ApiTest2.Models.User.GetOneUserByUserName(oClientRequestInfo.UserName, out user);
+            token = "";
+            string msg = ApiTest2.Models.User.GetOneUserByUserName(oClientRequestInfo.UserName, out User user);
             if (msg.Length > 0) return msg;
 
             var passwordHashLogin = GetInputPasswordHash(oClientRequestInfo.pwd, user.PasswordSalt);
             if (!user.PasswordHash.SequenceEqual(passwordHashLogin)) return "Tên đăng nhập hoặc Mật khẩu không đúng!";
 
             msg = Log.WriteActivityLog("Đăng nhập thành công", user.UserID, "");
-            return msg;
+            // Generate the JWT token after successful login
+            token = GenerateJwtToken(user);
+
+            return token;
         }
 
         public static string DoDelete(DBM dbm, int id, User user)
@@ -42,16 +50,18 @@ namespace ApiTest2.Services
         {
             public int UserID { get; set; }
             public string UserName { get; set; }
+            public string pwd { get; set; }
             public string Name { get; set; }
             public string GioiTinh { get; set; }
-            public string pwd { get; set; }
-            public int IDPhongban { get; set; }
-            public int IDChucVu { get; set; }
-            public int IDDonVi { get; set; }
             public DateTime Birthday { get; set; }
             public string Email { get; set; }
             public string NumberPhone { get; set; }
-            public int UserUpdate { get; set; }
+            public int IsTeacher { get; set; }
+            public int SuperAdmin { get; set; }
+            public Guid ObjectGUID { get; set; }
+            public DateTime CreatedTime { get; set; }
+            public DateTime UpdatedTime { get; set; }
+            public int IsActive { get; set; }
         }
         public static string InsertorUpdateToDB(int id, UserAddorUpdateInfo oClientRequestInfo, out User user)
         {
@@ -65,13 +75,11 @@ namespace ApiTest2.Services
                 PasswordHash = pwdHash,
                 PasswordSalt = pwdSalt,
                 GioiTinh = oClientRequestInfo.GioiTinh,
-                IDPhongban = oClientRequestInfo.IDPhongban,
-                IDChucVu = oClientRequestInfo.IDChucVu,
-                IDDonVi = oClientRequestInfo.IDDonVi,
+                IsActive = oClientRequestInfo.IsActive,
+                SuperAdmin = oClientRequestInfo.SuperAdmin,
                 Birthday = oClientRequestInfo.Birthday,
                 Email = oClientRequestInfo.Email,
                 NumberPhone = oClientRequestInfo.NumberPhone,
-                UserUpdate = oClientRequestInfo.UserUpdate,
             };
 
             DBM dbm = new DBM();
@@ -152,5 +160,33 @@ namespace ApiTest2.Services
         }
 
         #endregion
+
+        private static string GenerateJwtToken(User user)
+        {
+            string secretKey = ConfigurationManager.AppSettings["JwtSecretKey"];
+            // Define key and signing credentials
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)); // Replace with a secure key
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            // Define claims (add more claims if needed)
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
+                new Claim(ClaimTypes.Role, "User") // Optional: Add roles or other claims
+            };
+
+            // Create the token
+            var token = new JwtSecurityToken(
+                issuer: "ApiTest2", // Replace with your app's name or URL
+                audience: "ApiTest2",
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(30), // Token expiration
+                signingCredentials: credentials
+            );
+
+            // Return the serialized token
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }

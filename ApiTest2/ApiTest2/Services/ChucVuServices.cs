@@ -9,7 +9,7 @@ namespace ApiTest2.Services
 {
     public class ChucVuServices
     {
-        public static string DoDelete(DBM dbm, int id, ChucVuModel chucvu)
+        public static string DoDelete(DBM dbm, int id, Subject chucvu)
         {
             string msg = chucvu.Delete(dbm);
             if (msg.Length > 0) return msg;
@@ -25,9 +25,9 @@ namespace ApiTest2.Services
             public long MaChucVu { get; set; }
             public int IDChucVuChinh { get; set; }
         }
-        public static string InsertorUpdateToDB(int id, ChucVuAddorUpdateInfo oClientRequestInfo, out ChucVuModel chucvu)
+        public static string InsertorUpdateToDB(int id, ChucVuAddorUpdateInfo oClientRequestInfo, out Subject chucvu)
         {
-            chucvu = new ChucVuModel
+            chucvu = new Subject
             {
                 IDChucVu = id,
                 ChucVu = oClientRequestInfo.ChucVu,
@@ -43,7 +43,7 @@ namespace ApiTest2.Services
 
             dbm.CommitTransac();
 
-            msg = ChucVuModel.GetOneChucVuByID(id, out chucvu);
+            msg = Subject.GetOneChucVuByID(id, out chucvu);
             if (msg.Length > 0) return msg;
 
             msg = Log.WriteHistoryLog(chucvu.IDChucVu == 0 ? "thêm mới chức vụ" : "sửa chức vụ", chucvu.ObjectGUID, 0, "", 0);

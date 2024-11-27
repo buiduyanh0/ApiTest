@@ -14,14 +14,15 @@ namespace ApiTest2.Models
         public byte[] PasswordSalt { get; set; }
         public string Name { get; set; }
         public string GioiTinh { get; set; }
-        public int IDPhongban { get; set; }
-        public int IDChucVu { get; set; }
-        public int IDDonVi { get; set; }
         public DateTime Birthday { get; set; }
         public string Email { get; set; }
         public string NumberPhone { get; set; }
-        public int UserUpdate { get; set; }
+        public int IsTeacher { get; set; }
+        public int SuperAdmin { get; set; }
         public Guid ObjectGUID { get; set; }
+        public DateTime CreatedTime { get; set; }
+        public DateTime UpdatedTime { get; set; }
+        public int IsActive { get; set; }
 
         public static string GetAllUser(out List<User> lstuser)
         {
@@ -38,13 +39,11 @@ namespace ApiTest2.Models
                 PasswordHash,
                 PasswordSalt,
                 GioiTinh,
-                IDPhongban,
-                IDChucVu,
-                IDDonVi,
+                IsTeacher,
+                SuperAdmin,
                 Birthday,
                 Email,
-                NumberPhone,
-                UserUpdate
+                NumberPhone
             });
 
             if (msg.Length > 0) return msg;
@@ -79,29 +78,28 @@ namespace ApiTest2.Models
             return msg;
         }
 
-        //public string Update(BSS.DBM dbm)
-        //{
-        //    string msg = "";
-        //    msg = dbm.SetStoreNameAndParams("usp_User_Update", new
-        //    {
-        //        UserID,
-        //        UserName,
-        //        PasswordHash,
-        //        PasswordSalt,
-        //        Name,
-        //        GioiTinh,
-        //        IDPhongban,
-        //        IDChucVu,
-        //        IDDonVi,
-        //        Birthday,
-        //        Email,
-        //        NumberPhone
-        //    });
-        //    if (msg.Length > 0) return msg;
+        public string Update(BSS.DBM dbm)
+        {
+            string msg = "";
+            msg = dbm.SetStoreNameAndParams("usp_User_Update", new
+            {
+                UserID,
+                UserName,
+                Name,
+                PasswordHash,
+                PasswordSalt,
+                GioiTinh,
+                IsTeacher,
+                SuperAdmin,
+                Birthday,
+                Email,
+                NumberPhone
+            });
+            if (msg.Length > 0) return msg;
 
-        //    msg = dbm.ExecStore();
-        //    return msg;
-        //}
+            msg = dbm.ExecStore();
+            return msg;
+        }
 
         public string Delete(BSS.DBM dbm)
         {

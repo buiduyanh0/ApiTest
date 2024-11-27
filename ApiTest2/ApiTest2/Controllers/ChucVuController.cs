@@ -20,7 +20,7 @@ namespace ApiTest2.Controllers
         [Route("")]
         public Result GetList()
         {
-            string msg = ChucVuModel.GetAllChucVu(out List<ChucVuModel> lstchucvu);
+            string msg = Subject.GetAllChucVu(out List<Subject> lstchucvu);
             if (msg.Length > 0) return msg.ToMNFResultError("GetAllChucVu");
 
             return lstchucvu.ToResultOk();
@@ -32,7 +32,7 @@ namespace ApiTest2.Controllers
         [Route("{id:int}")]
         public Result GetOneChucVu(int id)
         {
-            string msg = ApiTest2.Models.ChucVuModel.GetOneChucVuByID(id, out ChucVuModel chucvu);
+            string msg = ApiTest2.Models.Subject.GetOneChucVuByID(id, out Subject chucvu);
             if (msg.Length > 0) return msg.ToMNFResultError("GetOneChucVuByID", new { id });
 
             return chucvu.ToResultOk();
@@ -45,7 +45,7 @@ namespace ApiTest2.Controllers
         [Route("edit/{id:int}")]
         public Result ChucVuAddorUpdate(int id, ChucVuServices.ChucVuAddorUpdateInfo oClientRequestInfo)
         {
-            string msg = ChucVuServices.InsertorUpdateToDB(id, oClientRequestInfo, out ChucVuModel chucvu);
+            string msg = ChucVuServices.InsertorUpdateToDB(id, oClientRequestInfo, out Subject chucvu);
             if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
 
             return chucvu.ToResultOk();
@@ -69,7 +69,7 @@ namespace ApiTest2.Controllers
         [Route("delete/{id:int}")]
         public Result ChucVuDelete(int id)
         {
-            string msg = ChucVuModel.GetOneChucVuByID(id, out ChucVuModel chucvu);
+            string msg = Subject.GetOneChucVuByID(id, out Subject chucvu);
             if (msg.Length > 0) msg.ToMNFResultError("GetOneChucVuByID", new { id });
 
             BSS.DBM dbm = new BSS.DBM();
