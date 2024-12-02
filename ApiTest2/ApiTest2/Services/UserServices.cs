@@ -10,6 +10,10 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Net.Http;
+using System.Net;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace ApiTest2.Services
 {
@@ -161,6 +165,7 @@ namespace ApiTest2.Services
 
         #endregion
 
+        #region token generate
         private static string GenerateJwtToken(User user)
         {
             string secretKey = ConfigurationManager.AppSettings["JwtSecretKey"];
@@ -187,6 +192,53 @@ namespace ApiTest2.Services
 
             // Return the serialized token
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        #endregion
+
+        public class JwtMiddleware : DelegatingHandler
+        {
+            private const string SecretKey = "JwtSecretKey"; // Same key used for generating the token
+
+            protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            {
+                if (!request.Headers.TryGetValues("Authorization", out var authorizationHeaders))
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized) { ReasonPhrase = "Missing Authorization Header" };
+                }
+
+                var token = authorizationHeaders.FirstOrDefault()?.Replace("Bearer ", "");
+                if (string.IsNullOrEmpty(token))
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized) { ReasonPhrase = "Invalid Token" };
+                }
+
+                try
+                {
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var key = Convert.FromBase64String(SecretKey);
+
+                    tokenHandler.ValidateToken(token, new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateLifetime = true
+                    }, out SecurityToken validatedToken);
+
+                    var jwtToken = (JwtSecurityToken)validatedToken;
+                    var claims = jwtToken.Claims;
+                    // Add claims to context if necessary
+                    ClaimsPrincipal principal = new ClaimsPrincipal(new ClaimsIdentity(claims));
+                    Thread.CurrentPrincipal = principal;
+                }
+                catch
+                {
+                    return new HttpResponseMessage(HttpStatusCode.Unauthorized) { ReasonPhrase = "Invalid Token" };
+                }
+
+                return await base.SendAsync(request, cancellationToken);
+            }
         }
     }
 }

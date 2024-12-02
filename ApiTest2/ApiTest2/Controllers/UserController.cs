@@ -27,6 +27,7 @@ namespace ApiTest2.Controllers
         }
         #endregion
         #region lấy dữ liệu người dùng
+        [Authorize]
         [HttpGet]
         [Route("")]
         public Result GetList()
@@ -39,19 +40,20 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region lấy dữ liệu người dùng theo ID
+        [Authorize]
         [HttpGet]
-        [Route("{id:int}")]
-        public Result GetOneUser(int id)
+        [Route("{username:string}")]
+        public Result GetOneUser(string username)
         {
-            string msg = ApiTest2.Models.User.GetOneUserByID(id, out User user);
-            if (msg.Length > 0) return msg.ToMNFResultError("GetOneUserByID", new { id });
+            string msg = ApiTest2.Models.User.GetOneUserByUserName(username, out User user);
+            if (msg.Length > 0) return msg.ToMNFResultError("GetOneUserByUserName", new { username });
 
             return user.ToResultOk();
         }
         #endregion
 
         #region add thông tin người dùng mới
-
+        [Authorize]
         [HttpPost]
         [Route("edit/{id:int}")]
         public Result UserAddorUpdate(int id, UserServices.UserAddorUpdateInfo oClientRequestInfo)
@@ -76,6 +78,7 @@ namespace ApiTest2.Controllers
         //#endregion
 
         #region xóa thông tin người dùng
+        [Authorize]
         [HttpDelete]
         [Route("delete/{id:int}")]
         public Result UserDelete(int id)

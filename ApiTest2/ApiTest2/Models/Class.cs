@@ -46,14 +46,27 @@ namespace ApiTest2.Models
             //    msg = dbm.GetOne(out documentCCS);
             //    return msg;
             //}
-            msg = DBM.GetOne("usp_PhongBan_GetOne", new { ClassId }, out classs);
+            msg = DBM.GetOne("usp_Class_GetOne", new { ClassId }, out classs);
+            if (msg.Length > 0) return msg;
+            return msg;
+        }
+        public static string GetOneClassByClassCode(string ClassCode, out Class classs)
+        {
+            string msg = "";
+            //using (BSS.DBM dbm = new DBM())
+            //{
+            //    dbm.SetStoreNameAndParams("usp_tbl_DocumentCCS_GetOne", new { Document_Id });
+            //    msg = dbm.GetOne(out documentCCS);
+            //    return msg;
+            //}
+            msg = DBM.GetOne("usp_Class_GetOneByClassCode", new { ClassCode }, out classs);
             if (msg.Length > 0) return msg;
             return msg;
         }
         public string Update(BSS.DBM dbm)
         {
             string msg = "";
-            msg = dbm.SetStoreNameAndParams("usp_PhongBan_Update", new
+            msg = dbm.SetStoreNameAndParams("usp_Class_Update", new
             {
                 ClassId,
                 ClassCode,

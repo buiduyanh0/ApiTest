@@ -13,29 +13,29 @@ using System.Web.Http;
 namespace ApiTest2.Controllers
 {
     [RoutePrefix("api/chucvu")]
-    public class ChucVuController : ApiController
+    public class ClassController : ApiController
     {
         #region lấy dữ liệu chức vụ
         [HttpGet]
         [Route("")]
         public Result GetList()
         {
-            string msg = Subject.GetAllChucVu(out List<Subject> lstchucvu);
-            if (msg.Length > 0) return msg.ToMNFResultError("GetAllChucVu");
+            string msg = Class.GetAllClass(out List<Class> lstclass);
+            if (msg.Length > 0) return msg.ToMNFResultError("GetAllClass");
 
-            return lstchucvu.ToResultOk();
+            return lstclass.ToResultOk();
         }
         #endregion
 
         #region lấy dữ liệu chức vụ theo ID
         [HttpGet]
         [Route("{id:int}")]
-        public Result GetOneChucVu(int id)
+        public Result GetOneClass(string classcode)
         {
-            string msg = ApiTest2.Models.Subject.GetOneChucVuByID(id, out Subject chucvu);
-            if (msg.Length > 0) return msg.ToMNFResultError("GetOneChucVuByID", new { id });
+            string msg = ApiTest2.Models.Class.GetOneClassByClassCode(classcode, out Class classs);
+            if (msg.Length > 0) return msg.ToMNFResultError("GetOneChucVuByID", new { classcode });
 
-            return chucvu.ToResultOk();
+            return classs.ToResultOk();
 
         }
         #endregion
@@ -69,13 +69,13 @@ namespace ApiTest2.Controllers
         [Route("delete/{id:int}")]
         public Result ChucVuDelete(int id)
         {
-            string msg = Subject.GetOneChucVuByID(id, out Subject chucvu);
+            string msg = Class.GetOneClassByID(id, out Class classs);
             if (msg.Length > 0) msg.ToMNFResultError("GetOneChucVuByID", new { id });
 
             BSS.DBM dbm = new BSS.DBM();
             dbm.BeginTransac();
 
-            msg = ChucVuServices.DoDelete(dbm, id, chucvu);
+            msg = ChucVuServices.DoDelete(dbm, id, classs);
             if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
 
             dbm.CommitTransac();
