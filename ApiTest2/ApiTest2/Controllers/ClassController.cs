@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Web.Http;
 
 namespace ApiTest2.Controllers
@@ -16,6 +17,7 @@ namespace ApiTest2.Controllers
     public class ClassController : ApiController
     {
         #region lấy dữ liệu chức vụ
+        [Authorize]
         [HttpGet]
         [Route("")]
         public Result GetList()
@@ -41,14 +43,28 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region add thông tin chức vụ mới
+        [Authorize]
         [HttpPost]
         [Route("edit/{id:int}")]
-        public Result ChucVuAddorUpdate(int id, ChucVuServices.ChucVuAddorUpdateInfo oClientRequestInfo)
+        public Result ClassAddorUpdate(int id, ChucVuServices.ChucVuAddorUpdateInfo oClientRequestInfo)
         {
-            string msg = ChucVuServices.InsertorUpdateToDB(id, oClientRequestInfo, out Subject chucvu);
-            if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
+            var identity = User.Identity as ClaimsIdentity;
+            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
+            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            return chucvu.ToResultOk();
+            if (superAdmin == 1 || isTeacher == 1)
+            {
+                string msg = ClassServices.InsertorUpdateToDB(id, oClientRequestInfo, out Class classs);
+                if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
+
+                return classs.ToResultOk();
+            }
+            else
+            {
+                string msg = "Bạn không có quyền truy cập";
+
+                return Result.GetResultError(msg);
+            }
         }
         #endregion
 
@@ -65,23 +81,36 @@ namespace ApiTest2.Controllers
         //#endregion
 
         #region xóa thông tin chức vụ
+        [Authorize]
         [HttpDelete]
         [Route("delete/{id:int}")]
         public Result ChucVuDelete(int id)
         {
-            string msg = Class.GetOneClassByID(id, out Class classs);
-            if (msg.Length > 0) msg.ToMNFResultError("GetOneChucVuByID", new { id });
+            var identity = User.Identity as ClaimsIdentity;
+            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
+            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            BSS.DBM dbm = new BSS.DBM();
-            dbm.BeginTransac();
+            if (superAdmin == 1 || isTeacher == 1)
+            {
+                string msg = Class.GetOneClassByID(id, out Class classs);
+                if (msg.Length > 0) msg.ToMNFResultError("GetOneChucVuByID", new { id });
 
-            msg = ChucVuServices.DoDelete(dbm, id, classs);
-            if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
+                BSS.DBM dbm = new BSS.DBM();
+                dbm.BeginTransac();
 
-            dbm.CommitTransac();
+                msg = ClassServices.DoDelete(dbm, id, classs);
+                if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
 
-            return Result.GetResultOk();
+                dbm.CommitTransac();
 
+                return Result.GetResultOk();
+            }
+            else
+            {
+                string msg = "Bạn không có quyền truy cập";
+
+                return Result.GetResultError(msg);
+            }
             #endregion
         }
     }

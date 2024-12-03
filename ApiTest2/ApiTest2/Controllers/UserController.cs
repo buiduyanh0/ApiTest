@@ -8,7 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Web.Http;
+using System.Windows.Interop;
 
 namespace ApiTest2.Controllers
 {
@@ -32,10 +35,22 @@ namespace ApiTest2.Controllers
         [Route("")]
         public Result GetList()
         {
-            string msg = ApiTest2.Models.User.GetAllUser(out List<User> lstuser);
-            if (msg.Length > 0) return msg.ToMNFResultError("GetAllUser");
+            var identity = User.Identity as ClaimsIdentity;
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
+            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            return lstuser.ToResultOk();
+            if (superAdmin == 1 || isTeacher == 1)
+            {
+                string msg = ApiTest2.Models.User.GetAllUser(out List<User> lstuser);
+                if (msg.Length > 0) return msg.ToMNFResultError("GetAllUser");
+                
+                return lstuser.ToResultOk();
+            } else {
+                string msg = "Bạn không có quyền truy cập";
+
+                return Result.GetResultError(msg);
+            }
         }
         #endregion
 
@@ -45,10 +60,24 @@ namespace ApiTest2.Controllers
         [Route("{username:string}")]
         public Result GetOneUser(string username)
         {
-            string msg = ApiTest2.Models.User.GetOneUserByUserName(username, out User user);
-            if (msg.Length > 0) return msg.ToMNFResultError("GetOneUserByUserName", new { username });
+            var identity = User.Identity as ClaimsIdentity;
+            username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
+            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            return user.ToResultOk();
+            if (superAdmin == 1 || isTeacher == 1)
+            {
+                string msg = ApiTest2.Models.User.GetOneUserByUserName(username, out User user);
+                if (msg.Length > 0) return msg.ToMNFResultError("GetOneUserByUserName", new { username });
+
+                return user.ToResultOk();
+            }
+            else
+            {
+                string msg = "Bạn không có quyền truy cập";
+
+                return Result.GetResultError(msg);
+            }
         }
         #endregion
 
@@ -58,10 +87,23 @@ namespace ApiTest2.Controllers
         [Route("edit/{id:int}")]
         public Result UserAddorUpdate(int id, UserServices.UserAddorUpdateInfo oClientRequestInfo)
         {
-            string msg = UserServices.InsertorUpdateToDB(id, oClientRequestInfo, out User user);
-            if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
+            var identity = User.Identity as ClaimsIdentity;
+            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
+            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            return user.ToResultOk();
+            if (superAdmin == 1 || isTeacher == 1)
+            {
+                string msg = UserServices.InsertorUpdateToDB(id, oClientRequestInfo, out User user);
+                if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
+
+                return user.ToResultOk();
+            }
+            else
+            {
+                string msg = "Bạn không có quyền truy cập";
+
+                return Result.GetResultError(msg);
+            }
         }
         #endregion
 
@@ -83,18 +125,31 @@ namespace ApiTest2.Controllers
         [Route("delete/{id:int}")]
         public Result UserDelete(int id)
         {
-            string msg = ApiTest2.Models.User.GetOneUserByID(id, out User user);
-            if (msg.Length > 0) return msg.ToMNFResultError("GetOneUserByID", new { id });
+            var identity = User.Identity as ClaimsIdentity;
+            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
+            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            BSS.DBM dbm = new BSS.DBM();
-            dbm.BeginTransac();
+            if (superAdmin == 1 || isTeacher == 1)
+            {
+                string msg = ApiTest2.Models.User.GetOneUserByID(id, out User user);
+                if (msg.Length > 0) return msg.ToMNFResultError("GetOneUserByID", new { id });
 
-            msg = UserServices.DoDelete(dbm, id, user);
-            if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
+                BSS.DBM dbm = new BSS.DBM();
+                dbm.BeginTransac();
 
-            dbm.CommitTransac();
+                msg = UserServices.DoDelete(dbm, id, user);
+                if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
 
-            return Result.GetResultOk();
+                dbm.CommitTransac();
+
+                return Result.GetResultOk();
+            }
+            else
+            {
+                string msg = "Bạn không có quyền truy cập";
+
+                return Result.GetResultError(msg);
+            }
         }
         #endregion
     }

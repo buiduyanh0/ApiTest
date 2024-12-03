@@ -176,9 +176,10 @@ namespace ApiTest2.Services
             // Define claims (add more claims if needed)
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
-                new Claim(ClaimTypes.Role, "User") // Optional: Add roles or other claims
+                new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()), // User ID
+                new Claim(ClaimTypes.Name, user.UserName),                    // Username
+                new Claim("IsTeacher", user.IsTeacher.ToString()),            // Custom claim: Teacher
+                new Claim("SuperAdmin", user.SuperAdmin.ToString())
             };
 
             // Create the token
