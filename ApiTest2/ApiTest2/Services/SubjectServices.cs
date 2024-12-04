@@ -7,47 +7,47 @@ using System.Web;
 
 namespace ApiTest2.Services
 {
-    public class DonViServices
+    public class SubjectServices
     {
-        public static string DoDelete(DBM dbm, int id, DonVi donvi)
+        public static string DoDelete(DBM dbm, string subjectcode, Subject subject)
         {
-            string msg = donvi.Delete(dbm);
+            string msg = subject.Delete(dbm);
             if (msg.Length > 0) return msg;
 
             string processContent = "đã xóa phòng ban có ID: " + id;
 
-            return Log.WriteHistoryLog(dbm, processContent, donvi.ObjectGUID, 0, "", 0); ;
+            return Log.WriteHistoryLog(dbm, processContent, subject.ObjectGUID, 0, "", 0); ;
         }
 
-        public class DonViAddorUpdateInfo
+        public class SubjectAddorUpdateInfo
         {
-            public string MaSoThue { get; set; }
-            public string Name { get; set; }
-            public string Address { get; set; }
-            public string Email { get; set; }
-            public string NumberPhone { get; set; }
+            public int SubjectId { get; set; }
+            public string SubjectName { get; set; }
+            public string SubjectCode { get; set; }
+            public int IsActive { get; set; }
         }
-        public static string InsertorUpdateToDB(int id, DonViAddorUpdateInfo oClientRequestInfo, out DonVi donvi)
+        public static string InsertorUpdateToDB(int id, SubjectAddorUpdateInfo oClientRequestInfo, out Subject subject)
         {
-            donvi = new DonVi
+            subject = new Subject
             {
-                IDDonVi = id,
-                MaSoThue = oClientRequestInfo.MaSoThue,
-                Name = oClientRequestInfo.Name,
-                Address = oClientRequestInfo.Address,
-                Email = oClientRequestInfo.Email,
-                NumberPhone = oClientRequestInfo.NumberPhone,
+                SubjectId = id,
+                SubjectCode = oClientRequestInfo.SubjectCode,
+                SubjectName = oClientRequestInfo.SubjectName,
+                IsActive = oClientRequestInfo.IsActive,
             };
 
             DBM dbm = new DBM();
             dbm.BeginTransac();
 
-            string msg = donvi.InsertorUpdate(dbm);
+            string msg = subject.InsertorUpdate(dbm);
             if (msg.Length > 0) { dbm.RollBackTransac(); return msg; }
 
             dbm.CommitTransac();
 
-            msg = Log.WriteHistoryLog(donvi.IDDonVi == 0 ? "thêm mới đơn vị" : "sửa đơn vị", donvi.ObjectGUID, 0, "", 0);
+            msg = Subject.GetOneSubjectByID(id, out Subject supject1);
+            if (msg.Length > 0) return msg;
+
+            msg = Log.WriteHistoryLog(subject.SubjectId == 0 ? "thêm mới môn học" : "sửa môn học", supject1.ObjectGUID, 0, "", 0);
             return msg;
         }
 

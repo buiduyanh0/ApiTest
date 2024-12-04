@@ -34,6 +34,20 @@ namespace ApiTest2.Models
             msg = dbm.ExecStore();
             return msg;
         }
+        public static string GetOneSubjectByID(int id, out Subject subject)
+        {
+            string msg = "";
+            //using (BSS.DBM dbm = new DBM(ConnectData.mysqlconnect))
+            //{
+            //    dbm.SetStoreNameAndParams("usp_tbl_DocumentCCS_GetOne", new { IDChucvu });
+            //    msg = dbm.GetOne(out chucvu);
+            //    return msg;
+            //};
+            //DBM dbm = new DBM(ConnectData.mysqlconnect);
+            msg = DBM.GetOne("usp_Subject_GetOne", new { id }, out subject);
+            if (msg.Length > 0) return msg;
+            return msg;
+        }
         public static string GetOneSubjectByCode(string subjectCode, out Subject subject)
         {
             string msg = "";
@@ -44,7 +58,7 @@ namespace ApiTest2.Models
             //    return msg;
             //};
             //DBM dbm = new DBM(ConnectData.mysqlconnect);
-            msg = DBM.GetOne("usp_Subject_GetOne", new { subjectCode }, out subject);
+            msg = DBM.GetOne("usp_Subject_GetOneByCode", new { subjectCode }, out subject);
             if (msg.Length > 0) return msg;
             return msg;
         }
@@ -66,7 +80,7 @@ namespace ApiTest2.Models
         public string Delete(BSS.DBM dbm)
         {
             string msg = "";
-            msg = dbm.SetStoreNameAndParams("usp_Subject_Delete", new { SubjectId });
+            msg = dbm.SetStoreNameAndParams("usp_Subject_Delete", new { SubjectCode });
             if (msg.Length > 0) return msg;
 
             msg = dbm.ExecStore();

@@ -13,7 +13,7 @@ using System.Web.Http;
 
 namespace ApiTest2.Controllers
 {
-    [RoutePrefix("api/chucvu")]
+    [RoutePrefix("api/class")]
     public class ClassController : ApiController
     {
         #region lấy dữ liệu chức vụ
@@ -46,7 +46,7 @@ namespace ApiTest2.Controllers
         [Authorize]
         [HttpPost]
         [Route("edit/{id:int}")]
-        public Result ClassAddorUpdate(int id, ChucVuServices.ChucVuAddorUpdateInfo oClientRequestInfo)
+        public Result ClassAddorUpdate(int id, ClassServices.ClassAddorUpdateInfo oClientRequestInfo)
         {
             var identity = User.Identity as ClaimsIdentity;
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte

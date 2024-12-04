@@ -7,46 +7,51 @@ using System.Web;
 
 namespace ApiTest2.Services
 {
-    public class ChucVuServices
+    public class ClassServices
     {
-        public static string DoDelete(DBM dbm, int id, Subject chucvu)
+        public static string DoDelete(DBM dbm, int id, Class classs)
         {
-            string msg = chucvu.Delete(dbm);
+            string msg = classs.Delete(dbm);
             if (msg.Length > 0) return msg;
 
-            string processContent = "đã xóa phòng ban có ID: " + id;
+            string processContent = "đã xóa lớp có ID: " + id;
 
-            return Log.WriteHistoryLog(dbm, processContent, chucvu.ObjectGUID, 0, "", 0);
+            return Log.WriteHistoryLog(dbm, processContent, classs.ObjectGUID, 0, "", 0);
         }
 
-        public class ChucVuAddorUpdateInfo
+        public class ClassAddorUpdateInfo
         {
-            public string ChucVu { get; set; }
-            public long MaChucVu { get; set; }
-            public int IDChucVuChinh { get; set; }
+            public int ClassId { get; set; }
+            public string ClassCode { get; set; }
+            public int SubjectCode { get; set; }
+            public int Semester { get; set; }
+            public int TeacherId { get; set; }
+            public int IsActive { get; set; }
         }
-        public static string InsertorUpdateToDB(int id, ChucVuAddorUpdateInfo oClientRequestInfo, out Subject chucvu)
+        public static string InsertorUpdateToDB(int id, ClassAddorUpdateInfo oClientRequestInfo, out Class classs)
         {
-            chucvu = new Subject
+            classs = new Class
             {
-                IDChucVu = id,
-                ChucVu = oClientRequestInfo.ChucVu,
-                MaChucVu = oClientRequestInfo.MaChucVu,
-                IDChucVuChinh = oClientRequestInfo.IDChucVuChinh
+                ClassId = id,
+                ClassCode = oClientRequestInfo.ClassCode,
+                SubjectCode = oClientRequestInfo.SubjectCode,
+                Semester = oClientRequestInfo.Semester,
+                TeacherId = oClientRequestInfo.TeacherId,
+                IsActive = oClientRequestInfo.IsActive
             };
 
             DBM dbm = new DBM();
             dbm.BeginTransac();
 
-            string msg = chucvu.InsertorUpdate(dbm);
+            string msg = classs.InsertorUpdate(dbm);
             if (msg.Length > 0) { dbm.RollBackTransac(); return msg; }
 
             dbm.CommitTransac();
 
-            msg = Subject.GetOneChucVuByID(id, out chucvu);
+            msg = Class.GetOneClassByID(id, out classs);
             if (msg.Length > 0) return msg;
 
-            msg = Log.WriteHistoryLog(chucvu.IDChucVu == 0 ? "thêm mới chức vụ" : "sửa chức vụ", chucvu.ObjectGUID, 0, "", 0);
+            msg = Log.WriteHistoryLog(classs.ClassId == 0 ? "thêm mới" : "sửa lớp học", classs.ObjectGUID, 0, "", 0);
             return msg;
         }
 
