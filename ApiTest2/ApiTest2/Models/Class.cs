@@ -30,7 +30,9 @@ namespace ApiTest2.Models
                 ClassCode,
                 SubjectCode,
                 Semester,
-                TeacherId
+                TeacherId,
+                ObjectGUID,
+                IsActive
             });
             if (msg.Length > 0) return msg;
 

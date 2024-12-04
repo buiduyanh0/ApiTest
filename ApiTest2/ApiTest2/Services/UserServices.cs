@@ -81,9 +81,10 @@ namespace ApiTest2.Services
                 GioiTinh = oClientRequestInfo.GioiTinh,
                 IsActive = oClientRequestInfo.IsActive,
                 SuperAdmin = oClientRequestInfo.SuperAdmin,
+                ObjectGUID = Guid.NewGuid(),
                 Birthday = oClientRequestInfo.Birthday,
                 Email = oClientRequestInfo.Email,
-                NumberPhone = oClientRequestInfo.NumberPhone,
+                NumberPhone = oClientRequestInfo.NumberPhone
             };
 
             DBM dbm = new DBM();
@@ -94,7 +95,10 @@ namespace ApiTest2.Services
 
             dbm.CommitTransac();
 
-            msg = Log.WriteHistoryLog(user.UserID == 0 ? "thêm mới user" : "sửa user", user.ObjectGUID, 0, "", 0);
+            msg = User.GetOneUserByID(id, out User user1);
+            if (msg.Length > 0) return msg;
+
+            msg = Log.WriteHistoryLog(user.UserID == 0 ? "thêm mới user" : "sửa user", user1.ObjectGUID, 0, "", 0);
             return msg;
         }
 

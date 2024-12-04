@@ -27,6 +27,7 @@ namespace ApiTest2.Services
             public int Semester { get; set; }
             public int TeacherId { get; set; }
             public int IsActive { get; set; }
+            public Guid ObjectGuid { get; set; }
         }
         public static string InsertorUpdateToDB(int id, ClassAddorUpdateInfo oClientRequestInfo, out Class classs)
         {
@@ -37,7 +38,8 @@ namespace ApiTest2.Services
                 SubjectCode = oClientRequestInfo.SubjectCode,
                 Semester = oClientRequestInfo.Semester,
                 TeacherId = oClientRequestInfo.TeacherId,
-                IsActive = oClientRequestInfo.IsActive
+                IsActive = oClientRequestInfo.IsActive,
+                ObjectGUID = Guid.NewGuid()
             };
 
             DBM dbm = new DBM();
@@ -48,10 +50,10 @@ namespace ApiTest2.Services
 
             dbm.CommitTransac();
 
-            msg = Class.GetOneClassByID(id, out classs);
+            msg = Class.GetOneClassByID(id, out Class classs1);
             if (msg.Length > 0) return msg;
 
-            msg = Log.WriteHistoryLog(classs.ClassId == 0 ? "thêm mới" : "sửa lớp học", classs.ObjectGUID, 0, "", 0);
+            msg = Log.WriteHistoryLog(classs.ClassId == 0 ? "thêm mới" : "sửa lớp học", classs1.ObjectGUID, 0, "", 0);
             return msg;
         }
 

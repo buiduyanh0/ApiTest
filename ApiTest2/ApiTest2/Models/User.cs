@@ -41,9 +41,11 @@ namespace ApiTest2.Models
                 GioiTinh,
                 IsTeacher,
                 SuperAdmin,
+                ObjectGUID,
                 Birthday,
                 Email,
-                NumberPhone
+                NumberPhone,
+                IsActive
             });
 
             if (msg.Length > 0) return msg;

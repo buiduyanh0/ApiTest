@@ -27,7 +27,9 @@ namespace ApiTest2.Models
             {
                 SubjectId,
                 SubjectName,
-                SubjectCode
+                SubjectCode,
+                ObjectGUID,
+                IsActive
             });
             if (msg.Length > 0) return msg;
 

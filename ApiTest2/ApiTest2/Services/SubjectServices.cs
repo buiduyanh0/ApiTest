@@ -24,6 +24,7 @@ namespace ApiTest2.Services
             public int SubjectId { get; set; }
             public string SubjectName { get; set; }
             public string SubjectCode { get; set; }
+            public Guid ObjectGuid { get; set; }
             public int IsActive { get; set; }
         }
         public static string InsertorUpdateToDB(int id, SubjectAddorUpdateInfo oClientRequestInfo, out Subject subject)
@@ -33,7 +34,8 @@ namespace ApiTest2.Services
                 SubjectId = id,
                 SubjectCode = oClientRequestInfo.SubjectCode,
                 SubjectName = oClientRequestInfo.SubjectName,
-                IsActive = oClientRequestInfo.IsActive,
+                ObjectGUID = Guid.NewGuid(),
+                IsActive = oClientRequestInfo.IsActive
             };
 
             DBM dbm = new DBM();

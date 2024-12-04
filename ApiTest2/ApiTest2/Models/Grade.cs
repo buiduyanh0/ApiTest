@@ -29,7 +29,9 @@ namespace ApiTest2.Models
                 GradeId,
                 ClassId,
                 StudentId,
-                Score
+                Score,
+                IsActive,
+                ObjectGUID
             });
             if (msg.Length > 0) return msg;
 
