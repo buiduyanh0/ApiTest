@@ -47,7 +47,7 @@ namespace ApiTest2.Services
 
             dbm.CommitTransac();
 
-            msg = Class.GetOneClassByID(id, out Class classRegistration1);
+            msg = ClassRegistration.GetOneRegistrationByID(id, out ClassRegistration classRegistration1);
             if (msg.Length > 0) return msg;
 
             msg = Log.WriteHistoryLog(classRegistration.ClassRegistrationId == 0 ? "thêm mới" : "sửa lớp học", classRegistration1.ObjectGUID, 0, "", 0);

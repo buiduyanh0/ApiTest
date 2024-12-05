@@ -40,6 +40,19 @@ namespace ApiTest2.Models
             msg = dbm.ExecStore();
             return msg;
         }
+        public static string GetOneRegistrationByID(int id, out ClassRegistration classRegistation)
+        {
+            string msg = "";
+            //using (BSS.DBM dbm = new DBM())
+            //{
+            //    dbm.SetStoreNameAndParams("usp_tbl_DocumentCCS_GetOne", new { Document_Id });
+            //    msg = dbm.GetOne(out documentCCS);
+            //    return msg;
+            //}
+            msg = DBM.GetOne("usp_ClassRegistration_GetOneByCode", new { id }, out classRegistation);
+            if (msg.Length > 0) return msg;
+            return msg;
+        }
         public static string GetOneRegistrationByStudentCode(string StudentCode, string ClassCode, out ClassRegistration classRegistation)
         {
             string msg = "";
@@ -49,7 +62,7 @@ namespace ApiTest2.Models
             //    msg = dbm.GetOne(out documentCCS);
             //    return msg;
             //}
-            msg = DBM.GetOne("usp_ClassRegistration_GetOne", new { StudentCode, ClassCode }, out classRegistation);
+            msg = DBM.GetOne("usp_ClassRegistration_GetOneByCode", new { StudentCode, ClassCode }, out classRegistation);
             if (msg.Length > 0) return msg;
             return msg;
         }

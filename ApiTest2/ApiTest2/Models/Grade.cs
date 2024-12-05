@@ -42,6 +42,19 @@ namespace ApiTest2.Models
             msg = dbm.ExecStore();
             return msg;
         }
+        public static string GetOneGradeByID(int id, out Grade grade)
+        {
+            string msg = "";
+            //using (BSS.DBM dbm = new DBM())
+            //{
+            //    dbm.SetStoreNameAndParams("usp_tbl_DocumentCCS_GetOne", new { Document_Id });
+            //    msg = dbm.GetOne(out documentCCS);
+            //    return msg;
+            //}
+            msg = DBM.GetOne("usp_Grade_GetOne", new { id }, out grade);
+            if (msg.Length > 0) return msg;
+            return msg;
+        }
         public static string GetOneGradeByCode(string studentcode, string classcode, out Grade grade)
         {
             string msg = "";
@@ -51,7 +64,7 @@ namespace ApiTest2.Models
             //    msg = dbm.GetOne(out documentCCS);
             //    return msg;
             //}
-            msg = DBM.GetOne("usp_Grade_GetOne", new { studentcode, classcode }, out grade);
+            msg = DBM.GetOne("usp_Grade_GetOneByCode", new { studentcode, classcode }, out grade);
             if (msg.Length > 0) return msg;
             return msg;
         }
@@ -61,8 +74,8 @@ namespace ApiTest2.Models
             msg = dbm.SetStoreNameAndParams("usp_Grade_Update", new
             {
                 GradeId,
-                ClassId,
-                StudentId,
+                ClassCode,
+                StudentCode,
                 Score
             });
             if (msg.Length > 0) return msg;

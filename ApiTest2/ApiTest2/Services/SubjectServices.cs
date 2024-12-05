@@ -14,7 +14,7 @@ namespace ApiTest2.Services
             string msg = subject.Delete(dbm);
             if (msg.Length > 0) return msg;
 
-            string processContent = "đã xóa phòng ban có ID: " + id;
+            string processContent = "đã xóa học phần có ID: " + subjectcode;
 
             return Log.WriteHistoryLog(dbm, processContent, subject.ObjectGUID, 0, "", 0); ;
         }

@@ -21,29 +21,38 @@ namespace ApiTest2.Services
 
         public class GradeAddorUpdateInfo
         {
-            public string TenPhongban { get; set; }
-            public long MaPhongBan { get; set; }
-            public int IDPhongBanChinh { get; set; }
+            public int GradeId { get; set; }
+            public int ClassCode { get; set; }
+            public int StudentCode { get; set; }
+            public int Score { get; set; }
+            public Guid ObjectGUID { get; set; }
+            public int IsActive { get; set; }
         }
         public static string InsertorUpdateToDB(int id, GradeAddorUpdateInfo oClientRequestInfo, out Grade grade)
         {
-            phongban = new Class
+            grade = new Grade
             {
-                IDPhongBan = id,
-                TenPhongBan = oClientRequestInfo.TenPhongban,
-                MaPhongBan = oClientRequestInfo.MaPhongBan,
-                IDPhongBanChinh = oClientRequestInfo.IDPhongBanChinh,
+                GradeId = id,
+                ClassCode = oClientRequestInfo.ClassCode,
+                StudentCode = oClientRequestInfo.StudentCode,
+                Score = oClientRequestInfo.Score,
+                ObjectGUID = Guid.NewGuid(),
+                IsActive = oClientRequestInfo.IsActive
+
             };
 
             DBM dbm = new DBM();
             dbm.BeginTransac();
 
-            string msg = phongban.InsertorUpdate(dbm);
+            string msg = grade.InsertorUpdate(dbm);
             if (msg.Length > 0) { dbm.RollBackTransac(); return msg; }
 
             dbm.CommitTransac();
 
-            msg = Log.WriteHistoryLog(phongban.IDPhongBan == 0 ? "thêm mới chức vụ" : "sửa chức vụ", phongban.ObjectGUID, 0, "", 0);
+            msg = Grade.GetOneGradeByID(id, out Grade grade1);
+            if (msg.Length > 0) return msg;
+
+            msg = Log.WriteHistoryLog(grade.GradeId == 0 ? "thêm mới chức vụ" : "sửa chức vụ", grade1.ObjectGUID, 0, "", 0);
             return msg;
         }
 
