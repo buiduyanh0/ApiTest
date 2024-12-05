@@ -11,7 +11,7 @@ namespace ApiTest2.Models
     {
         public int ClassRegistrationId { get; set; }
         public string ClassCode { get; set; }
-        public int StudentId { get; set; }
+        public string StudentCode { get; set; }
         public DateTime RegisterTime { get; set; }
         public Guid ObjectGUID { get; set; }
         public int IsActive { get; set; }
@@ -24,18 +24,19 @@ namespace ApiTest2.Models
         {
             string msg = "";
 
-            msg = dbm.SetStoreNameAndParams("usp_Class_InsertorUpdate", new
+            msg = dbm.SetStoreNameAndParams("usp_ClassRegistration_InsertorUpdate", new
             {
                 ClassRegistrationId,
                 ClassCode,
-                StudentId
+                StudentCode,
+                IsActive
             });
             if (msg.Length > 0) return msg;
 
             msg = dbm.ExecStore();
             return msg;
         }
-        public static string GetOneRegistrationByStudentId(int StudentId, out ClassRegistration classRegistation)
+        public static string GetOneRegistrationByStudentCode(string StudentCode, string ClassCode, out ClassRegistration classRegistation)
         {
             string msg = "";
             //using (BSS.DBM dbm = new DBM())
@@ -44,7 +45,7 @@ namespace ApiTest2.Models
             //    msg = dbm.GetOne(out documentCCS);
             //    return msg;
             //}
-            msg = DBM.GetOne("usp_Registration_GetOne", new { StudentId }, out classRegistation);
+            msg = DBM.GetOne("usp_ClassRegistration_GetOne", new { StudentCode, ClassCode }, out classRegistation);
             if (msg.Length > 0) return msg;
             return msg;
         }
@@ -65,14 +66,14 @@ namespace ApiTest2.Models
         //    return msg;
         //}
 
-        //public string Delete(BSS.DBM dbm)
-        //{
-        //    string msg = "";
-        //    msg = dbm.SetStoreNameAndParams("usp_PhongBan_Delete", new { ClassId });
-        //    if (msg.Length > 0) return msg;
+        public string Delete(BSS.DBM dbm)
+        {
+            string msg = "";
+            msg = dbm.SetStoreNameAndParams("usp_ClassRegistration_Delete", new { StudentCode, ClassCode });
+            if (msg.Length > 0) return msg;
 
-        //    msg = dbm.ExecStore();
-        //    return msg;
-        //}
+            msg = dbm.ExecStore();
+            return msg;
+        }
     }
 }

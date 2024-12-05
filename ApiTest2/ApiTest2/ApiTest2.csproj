@@ -330,8 +330,9 @@
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ClassController.cs" />
+    <Compile Include="Controllers\ClassRegistrationController.cs" />
     <Compile Include="Controllers\SubjectController.cs" />
-    <Compile Include="Controllers\PhongBanController.cs" />
+    <Compile Include="Controllers\GradeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -343,10 +344,11 @@
     <Compile Include="Models\Class.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ClassRegistrationServices.cs" />
     <Compile Include="Services\ClassServices.cs" />
     <Compile Include="Services\ConnectData.cs" />
     <Compile Include="Services\SubjectServices.cs" />
-    <Compile Include="Services\PhongBanServices.cs" />
+    <Compile Include="Services\GradeServices.cs" />
     <Compile Include="Services\UserOAuthProvider.cs" />
     <Compile Include="Services\UserServices.cs" />
     <Compile Include="Startup.cs" />
@@ -371,6 +373,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
     <Folder Include="Views\ChucVu\" />
+    <Folder Include="Views\ClassRegistration\" />
     <Folder Include="Views\DonVi\" />
     <Folder Include="Views\PhongBan\" />
   </ItemGroup>

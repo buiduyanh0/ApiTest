@@ -7,25 +7,25 @@ using System.Web;
 
 namespace ApiTest2.Services
 {
-    public class PhongBanServices
+    public class GradeServices
     {
-        public static string DoDelete(DBM dbm, int id, Class phongban)
+        public static string DoDelete(DBM dbm, string studentcode, string classcode, Grade grade)
         {
-            string msg = phongban.Delete(dbm);
+            string msg = grade.Delete(dbm);
             if (msg.Length > 0) return msg;
 
-            string processContent = "đã xóa phòng ban có ID: " + id;
+            string processContent = "đã xóa điểm của sinh viên: " + studentcode;
 
-            return Log.WriteHistoryLog(dbm, processContent, phongban.ObjectGUID, 0, "", 0); ;
+            return Log.WriteHistoryLog(dbm, processContent, grade.ObjectGUID, 0, "", 0); ;
         }
 
-        public class PhongBanAddorUpdateInfo
+        public class GradeAddorUpdateInfo
         {
             public string TenPhongban { get; set; }
             public long MaPhongBan { get; set; }
             public int IDPhongBanChinh { get; set; }
         }
-        public static string InsertorUpdateToDB(int id, PhongBanAddorUpdateInfo oClientRequestInfo, out Class phongban)
+        public static string InsertorUpdateToDB(int id, GradeAddorUpdateInfo oClientRequestInfo, out Grade grade)
         {
             phongban = new Class
             {
