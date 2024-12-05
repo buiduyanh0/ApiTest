@@ -54,7 +54,7 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu các sinh viên đã đăng ký môn học
         [Authorize]
         [HttpGet]
-        [Route("")]
+        [Route("{classcode:length(6)}")]
         public Result GetListClassStudent(string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;
@@ -77,7 +77,7 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu môn học của sinh viên
         [Authorize]
         [HttpGet]
-        [Route("{studentcode:string}")]
+        [Route("{studentcode:length(8)}")]
         public Result GetOneClassRegistration(string studentcode, string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;

@@ -55,7 +55,7 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu học phần theo ID
         [Authorize]
         [HttpGet]
-        [Route("{subjectcode:string}")]
+        [Route("{subjectcode:length(6)}")]
         public Result GetOneSubject(string subjectcode)
         {
             var identity = User.Identity as ClaimsIdentity;

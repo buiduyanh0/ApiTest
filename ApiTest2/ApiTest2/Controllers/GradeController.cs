@@ -20,7 +20,7 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu điểm theo mã lớp
         [Authorize]
         [HttpGet]
-        [Route("{classcode:string}")]
+        [Route("{classcode:length(6)}")]
         public Result GetListByClassCode(string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;
@@ -54,7 +54,7 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu điểm theo mssv
         [Authorize]
         [HttpGet]
-        [Route("{studentcode:string}")]
+        [Route("{studentcode:length(8)}")]
         public Result GetListGradeByStudentCode(string studentcode)
         {
             var identity = User.Identity as ClaimsIdentity;
@@ -79,7 +79,7 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu điểm của môn học theo MSSV
         [Authorize]
         [HttpGet]
-        [Route("{studentcode:string}")]
+        [Route("{studentcode:length(8)}")]
         public Result GetOneGradeByStudentCode(string classcode, string studentcode)
         {
             var identity = User.Identity as ClaimsIdentity;
@@ -150,7 +150,7 @@ namespace ApiTest2.Controllers
         #region xóa thông tin điểm
         [Authorize]
         [HttpDelete]
-        [Route("delete/{studentcode:string}")]
+        [Route("delete/{studentcode:length(3)}")]
         public Result GradeDelete(string studentcode, string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;

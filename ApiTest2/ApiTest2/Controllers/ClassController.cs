@@ -58,7 +58,7 @@ namespace ApiTest2.Controllers
 
         #region lấy dữ liệu lớp học theo ID
         [HttpGet]
-        [Route("{classcode:string}")]
+        [Route("{classcode:length(6)}")]
         public Result GetOneClass(string classcode)
         {
             string msg = ApiTest2.Models.Class.GetOneClassByClassCode(classcode, out Class classs);
@@ -109,7 +109,7 @@ namespace ApiTest2.Controllers
         #region xóa thông tin chức vụ
         [Authorize]
         [HttpDelete]
-        [Route("delete/{classcode:string}")]
+        [Route("delete/{classcode:length(6)}")]
         public Result ClassDelete(string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;
