@@ -9,12 +9,12 @@ namespace ApiTest2.Services
 {
     public class ClassServices
     {
-        public static string DoDelete(DBM dbm, int id, Class classs)
+        public static string DoDelete(DBM dbm, string classcode, Class classs)
         {
-            string msg = classs.Delete(dbm);
+            string msg = classs.DeleteClass(dbm);
             if (msg.Length > 0) return msg;
 
-            string processContent = "đã xóa lớp có ID: " + id;
+            string processContent = "đã xóa lớp có ID: " + classcode;
 
             return Log.WriteHistoryLog(dbm, processContent, classs.ObjectGUID, 0, "", 0);
         }

@@ -15,7 +15,7 @@ namespace ApiTest2.Controllers
     [RoutePrefix("api/supject")]
     public class SubjectController : ApiController
     {
-        // GET: DonVi
+        // GET: Subject
         #region lấy dữ liệu môn học
         [Authorize]
         [HttpGet]
@@ -26,23 +26,34 @@ namespace ApiTest2.Controllers
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
             byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            if (superAdmin == 1)
+            if (identity != null)
             {
-                string msg = Subject.GetAllSubject(out List<Subject> lstsubject);
-                if (msg.Length > 0) return msg.ToMNFResultError("GetAllSubject");
+                if (superAdmin == 1)
+                {
+                    string msg = Subject.GetAllSubject(out List<Subject> lstsubject);
+                    if (msg.Length > 0) return msg.ToMNFResultError("GetAllSubject");
 
-                return lstsubject.ToResultOk();
+                    return lstsubject.ToResultOk();
+                }
+                else
+                {
+                    string msg = "Bạn không có quyền truy cập";
+
+                    return Result.GetResultError(msg);
+                }
             }
             else
             {
-                string msg = "Bạn không có quyền truy cập";
+                string msg = "Bạn cần đăng nhập";
 
                 return Result.GetResultError(msg);
             }
+
         }
         #endregion
 
-        #region lấy dữ liệu môn học theo ID
+        #region lấy dữ liệu học phần theo ID
+        [Authorize]
         [HttpGet]
         [Route("{subjectcode:string}")]
         public Result GetOneSubject(string subjectcode)
@@ -51,7 +62,7 @@ namespace ApiTest2.Controllers
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
             byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            if (superAdmin == 1)
+            if (identity != null)
             {
                 string msg = ApiTest2.Models.Subject.GetOneSubjectByCode(subjectcode, out Subject supject);
                 if (msg.Length > 0) return msg.ToMNFResultError("GetOneSubjectByCode", new { subjectcode });
@@ -60,7 +71,7 @@ namespace ApiTest2.Controllers
             }
             else
             {
-                string msg = "Bạn không có quyền truy cập";
+                string msg = "Bạn cần đăng nhập";
 
                 return Result.GetResultError(msg);
             }
@@ -68,6 +79,7 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region add thông tin môn học mới
+        [Authorize]
         [HttpPost]
         [Route("edit/{id:int}")]
         public Result SupjectAddorUpdate(int id, SubjectServices.SubjectAddorUpdateInfo oClientRequestInfo)
@@ -76,16 +88,25 @@ namespace ApiTest2.Controllers
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
             byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            if (superAdmin == 1)
+            if (identity != null)
             {
-                string msg = SubjectServices.InsertorUpdateToDB(id, oClientRequestInfo, out Subject subject);
-                if (msg.Length > 0) return msg.ToMNFResultError("InserorUpdatetToDB", new { oClientRequestInfo });
+                if (superAdmin == 1)
+                {
+                    string msg = SubjectServices.InsertorUpdateToDB(id, oClientRequestInfo, out Subject subject);
+                    if (msg.Length > 0) return msg.ToMNFResultError("InserorUpdatetToDB", new { oClientRequestInfo });
 
-                return subject.ToResultOk();
+                    return subject.ToResultOk();
+                }
+                else
+                {
+                    string msg = "Bạn không có quyền truy cập";
+
+                    return Result.GetResultError(msg);
+                }
             }
             else
             {
-                string msg = "Bạn không có quyền truy cập";
+                string msg = "Bạn cần đăng nhập";
 
                 return Result.GetResultError(msg);
             }
@@ -105,6 +126,7 @@ namespace ApiTest2.Controllers
         //#endregion
 
         #region xóa thông tin môn học
+        [Authorize]
         [HttpDelete]
         [Route("delete/{supjectcode:string}")]
         public Result SubjectDelete(string subjectcode)
@@ -113,24 +135,33 @@ namespace ApiTest2.Controllers
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
             byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            if (superAdmin == 1)
+            if (identity != null)
             {
-                string msg = Subject.GetOneSubjectByCode(subjectcode, out Subject subject);
-                if (msg.Length > 0) msg.ToMNFResultError("GetOneSubjectByCode", new { subjectcode });
+                if (superAdmin == 1)
+                {
+                    string msg = Subject.GetOneSubjectByCode(subjectcode, out Subject subject);
+                    if (msg.Length > 0) msg.ToMNFResultError("GetOneSubjectByCode", new { subjectcode });
 
-                BSS.DBM dbm = new BSS.DBM();
-                dbm.BeginTransac();
+                    BSS.DBM dbm = new BSS.DBM();
+                    dbm.BeginTransac();
 
-                msg = SubjectServices.DoDelete(dbm, subjectcode, subject);
-                if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
+                    msg = SubjectServices.DoDelete(dbm, subjectcode, subject);
+                    if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
 
-                dbm.CommitTransac();
+                    dbm.CommitTransac();
 
-                return Result.GetResultOk();
+                    return Result.GetResultOk();
+                }
+                else
+                {
+                    string msg = "Bạn không có quyền truy cập";
+
+                    return Result.GetResultError(msg);
+                }
             }
             else
             {
-                string msg = "Bạn không có quyền truy cập";
+                string msg = "Bạn cần đăng nhập";
 
                 return Result.GetResultError(msg);
             }

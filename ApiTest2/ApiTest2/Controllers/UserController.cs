@@ -39,15 +39,25 @@ namespace ApiTest2.Controllers
             string username = identity.FindFirst(ClaimTypes.Name)?.Value;
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
             byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
-
-            if (superAdmin == 1 || isTeacher == 1)
+            if (identity != null)
             {
-                string msg = ApiTest2.Models.User.GetAllUser(out List<User> lstuser);
-                if (msg.Length > 0) return msg.ToMNFResultError("GetAllUser");
-                
-                return lstuser.ToResultOk();
-            } else {
-                string msg = "Bạn không có quyền truy cập";
+                if (superAdmin == 1 || isTeacher == 1)
+                {
+                    string msg = ApiTest2.Models.User.GetAllUser(out List<User> lstuser);
+                    if (msg.Length > 0) return msg.ToMNFResultError("GetAllUser");
+
+                    return lstuser.ToResultOk();
+                }
+                else
+                {
+                    string msg = "Bạn không có quyền truy cập";
+
+                    return Result.GetResultError(msg);
+                }
+            } 
+            else
+            {
+                string msg = "Bạn cần đăng nhập";
 
                 return Result.GetResultError(msg);
             }
@@ -91,19 +101,29 @@ namespace ApiTest2.Controllers
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
             byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            if (superAdmin == 1 || isTeacher == 1)
+            if (identity != null)
             {
-                string msg = UserServices.InsertorUpdateToDB(id, oClientRequestInfo, out User user);
-                if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
+                if (superAdmin == 1)
+                {
+                    string msg = UserServices.InsertorUpdateToDB(id, oClientRequestInfo, out User user);
+                    if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
 
-                return user.ToResultOk();
-            }
+                    return user.ToResultOk();
+                }
+                else
+                {
+                    string msg = "Bạn không có quyền truy cập";
+
+                    return Result.GetResultError(msg);
+                }
+            } 
             else
             {
-                string msg = "Bạn không có quyền truy cập";
+                string msg = "Bạn cần đăng nhập";
 
                 return Result.GetResultError(msg);
             }
+            
         }
         #endregion
 
@@ -129,24 +149,33 @@ namespace ApiTest2.Controllers
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
             byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            if (superAdmin == 1 || isTeacher == 1)
+            if (identity != null)
             {
-                string msg = ApiTest2.Models.User.GetOneUserByID(id, out User user);
-                if (msg.Length > 0) return msg.ToMNFResultError("GetOneUserByID", new { id });
+                if (superAdmin == 1)
+                {
+                    string msg = ApiTest2.Models.User.GetOneUserByID(id, out User user);
+                    if (msg.Length > 0) return msg.ToMNFResultError("GetOneUserByID", new { id });
 
-                BSS.DBM dbm = new BSS.DBM();
-                dbm.BeginTransac();
+                    BSS.DBM dbm = new BSS.DBM();
+                    dbm.BeginTransac();
 
-                msg = UserServices.DoDelete(dbm, id, user);
-                if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
+                    msg = UserServices.DoDelete(dbm, id, user);
+                    if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
 
-                dbm.CommitTransac();
+                    dbm.CommitTransac();
 
-                return Result.GetResultOk();
-            }
+                    return Result.GetResultOk();
+                }
+                else
+                {
+                    string msg = "Bạn không có quyền truy cập";
+
+                    return Result.GetResultError(msg);
+                }
+            } 
             else
             {
-                string msg = "Bạn không có quyền truy cập";
+                string msg = "Bạn cần đăng nhập";
 
                 return Result.GetResultError(msg);
             }

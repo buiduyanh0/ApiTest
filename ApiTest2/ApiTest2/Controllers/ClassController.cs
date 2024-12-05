@@ -2,6 +2,7 @@
 using ApiTest2.Services;
 using BSS;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,33 +17,58 @@ namespace ApiTest2.Controllers
     [RoutePrefix("api/class")]
     public class ClassController : ApiController
     {
-        #region lấy dữ liệu chức vụ
+        #region lấy dữ liệu lớp học
         [Authorize]
         [HttpGet]
         [Route("")]
         public Result GetList()
         {
-            string msg = Class.GetAllClass(out List<Class> lstclass);
-            if (msg.Length > 0) return msg.ToMNFResultError("GetAllClass");
+            var identity = User.Identity as ClaimsIdentity;
+            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
+            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            return lstclass.ToResultOk();
+            if (superAdmin == 1 || isTeacher == 1)
+            {
+                string msg = Class.GetAllClass(out List<Class> lstclass);
+                if (msg.Length > 0) return msg.ToMNFResultError("GetAllClass");
+
+                return lstclass.ToResultOk();
+            }
+            else
+            {
+                string msg = "Bạn không có quyền truy cập";
+
+                return Result.GetResultError(msg);
+            }
         }
         #endregion
 
-        #region lấy dữ liệu chức vụ theo ID
+        //#region lấy dữ liệu lớp học
+        //[Authorize]
+        //[HttpGet]
+        //[Route("{studentcode:string}")]
+        //public Result GetListByStudentCode(string studentcode)
+        //{
+        //    string msg = ApiTest2.Models.Class.GetOneClassByStudentCode(studentcode, out Class classs);
+        //    if (msg.Length > 0) return msg.ToMNFResultError("GetOneClassByStudentCode", new { studentcode });
+
+        //    return classs.ToResultOk();
+        //}
+        //#endregion
+
+        #region lấy dữ liệu lớp học theo ID
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{classcode:string}")]
         public Result GetOneClass(string classcode)
         {
             string msg = ApiTest2.Models.Class.GetOneClassByClassCode(classcode, out Class classs);
-            if (msg.Length > 0) return msg.ToMNFResultError("GetOneChucVuByID", new { classcode });
+            if (msg.Length > 0) return msg.ToMNFResultError("GetOneClassByClassCode", new { classcode });
 
             return classs.ToResultOk();
-
         }
         #endregion
 
-        #region add thông tin chức vụ mới
+        #region add thông tin lớp học mới
         [Authorize]
         [HttpPost]
         [Route("edit/{id:int}")]
@@ -52,7 +78,7 @@ namespace ApiTest2.Controllers
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
             byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
 
-            if (superAdmin == 1 || isTeacher == 1)
+            if (superAdmin == 1)
             {
                 string msg = ClassServices.InsertorUpdateToDB(id, oClientRequestInfo, out Class classs);
                 if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
@@ -83,8 +109,8 @@ namespace ApiTest2.Controllers
         #region xóa thông tin chức vụ
         [Authorize]
         [HttpDelete]
-        [Route("delete/{id:int}")]
-        public Result ChucVuDelete(int id)
+        [Route("delete/{classcode:string}")]
+        public Result ClassDelete(string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
@@ -92,13 +118,13 @@ namespace ApiTest2.Controllers
 
             if (superAdmin == 1 || isTeacher == 1)
             {
-                string msg = Class.GetOneClassByID(id, out Class classs);
-                if (msg.Length > 0) msg.ToMNFResultError("GetOneChucVuByID", new { id });
+                string msg = Class.GetOneClassByClassCode(classcode, out Class classs);
+                if (msg.Length > 0) msg.ToMNFResultError("GetOneClassByClassCode", new { classcode });
 
                 BSS.DBM dbm = new BSS.DBM();
                 dbm.BeginTransac();
 
-                msg = ClassServices.DoDelete(dbm, id, classs);
+                msg = ClassServices.DoDelete(dbm, classcode, classs);
                 if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
 
                 dbm.CommitTransac();

@@ -20,6 +20,10 @@ namespace ApiTest2.Models
         {
             return DBM.GetList("usp_ClassRegistration_GetAll", new { }, out lstclassRegistration);
         }
+        public static string GetAllClassRegistrationByClassCode(string classcode, out List<ClassRegistration> lstclassRegistration)
+        {
+            return DBM.GetList("usp_ClassRegistration_GetAllByClassCode", new { classcode }, out lstclassRegistration);
+        }
         public string InsertorUpdate(BSS.DBM dbm)
         {
             string msg = "";

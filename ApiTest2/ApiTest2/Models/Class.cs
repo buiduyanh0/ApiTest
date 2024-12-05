@@ -39,7 +39,7 @@ namespace ApiTest2.Models
             msg = dbm.ExecStore();
             return msg;
         }
-        public static string GetOneClassByID(int ClassId, out Class classs)
+        public static string GetOneClassByID(int id, out Class classs)
         {
             string msg = "";
             //using (BSS.DBM dbm = new DBM())
@@ -48,11 +48,24 @@ namespace ApiTest2.Models
             //    msg = dbm.GetOne(out documentCCS);
             //    return msg;
             //}
-            msg = DBM.GetOne("usp_Class_GetOne", new { ClassId }, out classs);
+            msg = DBM.GetOne("usp_Class_GetOneByID", new { id }, out classs);
             if (msg.Length > 0) return msg;
             return msg;
         }
-        public static string GetOneClassByClassCode(string ClassCode, out Class classs)
+        //public static string GetOneClassByStudentCode(string StudentCode, out Class classs)
+        //{
+        //    string msg = "";
+        //    //using (BSS.DBM dbm = new DBM())
+        //    //{
+        //    //    dbm.SetStoreNameAndParams("usp_tbl_DocumentCCS_GetOne", new { Document_Id });
+        //    //    msg = dbm.GetOne(out documentCCS);
+        //    //    return msg;
+        //    //}
+        //    msg = DBM.GetOne("usp_Class_GetOneByStudentCode", new { StudentCode }, out classs);
+        //    if (msg.Length > 0) return msg;
+        //    return msg;
+        //}
+        public static string GetOneClassByClassCode(string classcode, out Class classs)
         {
             string msg = "";
             //using (BSS.DBM dbm = new DBM())
@@ -61,7 +74,7 @@ namespace ApiTest2.Models
             //    msg = dbm.GetOne(out documentCCS);
             //    return msg;
             //}
-            msg = DBM.GetOne("usp_Class_GetOneByClassCode", new { ClassCode }, out classs);
+            msg = DBM.GetOne("usp_Class_GetOneByClassCode", new { classcode }, out classs);
             if (msg.Length > 0) return msg;
             return msg;
         }
@@ -82,14 +95,23 @@ namespace ApiTest2.Models
             return msg;
         }
 
-        public string Delete(BSS.DBM dbm)
+        public string DeleteClass(BSS.DBM dbm)
         {
             string msg = "";
-            msg = dbm.SetStoreNameAndParams("usp_PhongBan_Delete", new { ClassId });
+            msg = dbm.SetStoreNameAndParams("usp_Class_Delete", new { ClassCode });
             if (msg.Length > 0) return msg;
 
             msg = dbm.ExecStore();
             return msg;
         }
+        //public string DeleteStudentInClass(BSS.DBM dbm)
+        //{
+        //    string msg = "";
+        //    msg = dbm.SetStoreNameAndParams("usp_Class_DeleteStudent", new { StudentCode });
+        //    if (msg.Length > 0) return msg;
+
+        //    msg = dbm.ExecStore();
+        //    return msg;
+        //}
     }
 }
