@@ -12,10 +12,11 @@ namespace ApiTest2.Models
     {
         public int AttendanceId { get; set; }
         public string ClassCode { get; set; }
-        public int StudentCode { get; set; }
+        public string StudentCode { get; set; }
         public DateTime AttentdaceDate { get; set; }
         public byte IsPresent { get; set; }
         public Guid ObjectGuid { get; set; }
+        public int IsActive { get; set; }  
 
         public static string GetAllAttendance(out List<Attendance> lstattendance)
         {
@@ -25,12 +26,14 @@ namespace ApiTest2.Models
         {
             string msg = "";
 
-            msg = dbm.SetStoreNameAndParams("usp_Class_InsertorUpdate", new
+            msg = dbm.SetStoreNameAndParams("usp_Attendance_InsertorUpdate", new
             {
                 AttendanceId,
                 ClassCode,
                 StudentCode,
-                IsPresent
+                IsPresent,
+                ObjectGuid,
+                IsActive
             });
             if (msg.Length > 0) return msg;
 
@@ -47,6 +50,32 @@ namespace ApiTest2.Models
             //    return msg;
             //}
             msg = DBM.GetOne("usp_Attendance_GetOne", new { AttendanceId }, out attendance);
+            if (msg.Length > 0) return msg;
+            return msg;
+        }
+        public static string GetAllAttendanceByClassCode(string classcode, out Attendance attendance)
+        {
+            string msg = "";
+            //using (BSS.DBM dbm = new DBM())
+            //{
+            //    dbm.SetStoreNameAndParams("usp_tbl_DocumentCCS_GetOne", new { Document_Id });
+            //    msg = dbm.GetOne(out documentCCS);
+            //    return msg;
+            //}
+            msg = DBM.GetOne("usp_Attendance_GetOneByClassCode", new { classcode }, out attendance);
+            if (msg.Length > 0) return msg;
+            return msg;
+        }
+        public static string GetAllAttendanceByStudentCode(string studentcode, out Attendance attendance)
+        {
+            string msg = "";
+            //using (BSS.DBM dbm = new DBM())
+            //{
+            //    dbm.SetStoreNameAndParams("usp_tbl_DocumentCCS_GetOne", new { Document_Id });
+            //    msg = dbm.GetOne(out documentCCS);
+            //    return msg;
+            //}
+            msg = DBM.GetOne("usp_Attendance_GetOneByStudentCode", new { studentcode }, out attendance);
             if (msg.Length > 0) return msg;
             return msg;
         }

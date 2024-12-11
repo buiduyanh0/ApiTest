@@ -382,3 +382,9 @@ D:\Working\ApiTest2\ApiTest2\ApiTest2\bin\System.Web.WebPages.Deployment.xml
 D:\Working\ApiTest2\ApiTest2\ApiTest2\bin\System.Web.WebPages.Razor.xml
 D:\Working\ApiTest2\ApiTest2\ApiTest2\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 D:\Working\ApiTest2\ApiTest2\ApiTest2\obj\Debug\ApiTest2.csproj.Up2Date
+D:\Working\ApiTest2\ApiTest2\ApiTest2\bin\Microsoft.OpenApi.dll
+D:\Working\ApiTest2\ApiTest2\ApiTest2\bin\Swashbuckle.AspNetCore.Swagger.dll
+D:\Working\ApiTest2\ApiTest2\ApiTest2\bin\Microsoft.OpenApi.pdb
+D:\Working\ApiTest2\ApiTest2\ApiTest2\bin\Microsoft.OpenApi.xml
+D:\Working\ApiTest2\ApiTest2\ApiTest2\bin\Swashbuckle.AspNetCore.Swagger.pdb
+D:\Working\ApiTest2\ApiTest2\ApiTest2\bin\Swashbuckle.AspNetCore.Swagger.xml

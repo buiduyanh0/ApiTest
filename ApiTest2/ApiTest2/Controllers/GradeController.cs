@@ -18,7 +18,7 @@ namespace ApiTest2.Controllers
     public class GradeController : ApiController
     {
         #region lấy dữ liệu điểm theo mã lớp
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("{classcode:length(6)}")]
         public Result GetListByClassCode(string classcode)
@@ -52,7 +52,7 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region lấy dữ liệu điểm theo mssv
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("{studentcode:length(8)}")]
         public Result GetListGradeByStudentCode(string studentcode)
@@ -77,7 +77,7 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region lấy dữ liệu điểm của môn học theo MSSV
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("{studentcode:length(8)}")]
         public Result GetOneGradeByStudentCode(string classcode, string studentcode)
@@ -102,7 +102,7 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region add thông tin điểm mới
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [Route("edit/{id:int}")]
         public Result GradeAddorUpdate(int id, GradeServices.GradeAddorUpdateInfo oClientRequestInfo)
@@ -148,9 +148,9 @@ namespace ApiTest2.Controllers
         //#endregion
 
         #region xóa thông tin điểm
-        [Authorize]
+        //[Authorize]
         [HttpDelete]
-        [Route("delete/{studentcode:length(3)}")]
+        [Route("delete/{studentcode:length(8)}")]
         public Result GradeDelete(string studentcode, string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;

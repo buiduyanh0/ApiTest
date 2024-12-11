@@ -30,7 +30,7 @@ namespace ApiTest2.Controllers
         }
         #endregion
         #region lấy dữ liệu người dùng
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("")]
         public Result GetList()
@@ -65,9 +65,9 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region lấy dữ liệu người dùng theo ID
-        [Authorize]
+        //[Authorize]
         [HttpGet]
-        [Route("{username:string}")]
+        [Route("{username:length(8)}")]
         public Result GetOneUser(string username)
         {
             var identity = User.Identity as ClaimsIdentity;
@@ -92,7 +92,7 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region add thông tin người dùng mới
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [Route("edit/{id:int}")]
         public Result UserAddorUpdate(int id, UserServices.UserAddorUpdateInfo oClientRequestInfo)
@@ -140,7 +140,7 @@ namespace ApiTest2.Controllers
         //#endregion
 
         #region xóa thông tin người dùng
-        [Authorize]
+        //[Authorize]
         [HttpDelete]
         [Route("delete/{id:int}")]
         public Result UserDelete(int id)

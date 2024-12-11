@@ -1,23 +1,20 @@
 ﻿using ApiTest2.Models;
 using ApiTest2.Services;
 using BSS;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.Ajax.Utilities;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
-using System.Web.Http;
+using System.Web;
+using System.Web.Mvc;
 
 namespace ApiTest2.Controllers
 {
-    [RoutePrefix("api/class")]
-    public class ClassController : ApiController
+    [RoutePrefix("api/attendance")]
+    public class AttendanceController : Controller
     {
-        #region lấy dữ liệu lớp học
+        #region lấy dữ liệu điểm danh
         //[Authorize]
         [HttpGet]
         [Route("")]
@@ -31,10 +28,10 @@ namespace ApiTest2.Controllers
             {
                 if (superAdmin == 1 || isTeacher == 1)
                 {
-                    string msg = Class.GetAllClass(out List<Class> lstclass);
-                    if (msg.Length > 0) return msg.ToMNFResultError("GetAllClass");
+                    string msg = Attendance.GetAllAttendance(out List<Attendance> lstattendance);
+                    if (msg.Length > 0) return msg.ToMNFResultError("GetAllAttendance");
 
-                    return lstclass.ToResultOk();
+                    return lstattendance.ToResultOk();
                 }
                 else
                 {
@@ -48,6 +45,7 @@ namespace ApiTest2.Controllers
 
                 return Result.GetResultError(msg);
             }
+            
         }
         #endregion
 
@@ -64,10 +62,10 @@ namespace ApiTest2.Controllers
         //}
         //#endregion
 
-        #region lấy dữ liệu lớp học theo ID
+        #region lấy dữ liệu điểm danh theo lớp học
         [HttpGet]
         [Route("{classcode:length(6)}")]
-        public Result GetOneClass(string classcode)
+        public Result GetAllAttendanceByClassCode(string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
@@ -75,12 +73,20 @@ namespace ApiTest2.Controllers
 
             if (identity != null)
             {
-                string msg = ApiTest2.Models.Class.GetOneClassByClassCode(classcode, out Class classs);
-                if (msg.Length > 0) return msg.ToMNFResultError("GetOneClassByClassCode", new { classcode });
+                if (superAdmin == 1 || isTeacher == 1)
+                {
+                    string msg = ApiTest2.Models.Attendance.GetAllAttendanceByClassCode(classcode, out Attendance attendance);
+                    if (msg.Length > 0) return msg.ToMNFResultError("GetAllAttendanceByClassCode", new { classcode });
 
-                return classs.ToResultOk();
-            }
-            else
+                    return attendance.ToResultOk();
+                }
+                else
+                {
+                    string msg = "Bạn không có quyền truy cập";
+
+                    return Result.GetResultError(msg);
+                }
+            } else
             {
                 string msg = "Bạn cần đăng nhập";
 
@@ -90,11 +96,10 @@ namespace ApiTest2.Controllers
         }
         #endregion
 
-        #region add thông tin lớp học mới
-        //[Authorize]
-        [HttpPost]
-        [Route("edit/{id:int}")]
-        public Result ClassAddorUpdate(int id, ClassServices.ClassAddorUpdateInfo oClientRequestInfo)
+        #region lấy dữ liệu điểm danh theo sinh viên
+        [HttpGet]
+        [Route("{classcode:length(6)}")]
+        public Result GetAllAttendanceByStudentCode(string studentcode)
         {
             var identity = User.Identity as ClaimsIdentity;
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
@@ -102,12 +107,38 @@ namespace ApiTest2.Controllers
 
             if (identity != null)
             {
-                if (superAdmin == 1)
+                string msg = ApiTest2.Models.Attendance.GetAllAttendanceByStudentCode(studentcode, out Attendance attendance);
+                if (msg.Length > 0) return msg.ToMNFResultError("GetAllAttendanceByStudentCode", new { studentcode });
+
+                return attendance.ToResultOk();
+            }
+            else
+            {
+                string msg = "Bạn cần đăng nhập";
+
+                return Result.GetResultError(msg);
+            }
+        }
+        #endregion
+
+        #region add thông tin lớp học mới
+        //[Authorize]
+        [HttpPost]
+        [Route("edit/{id:int}")]
+        public Result AttendanceAddorUpdate(int id, AttentdanceServices.AttentdanceAddorUpdateInfo oClientRequestInfo)
+        {
+            var identity = User.Identity as ClaimsIdentity;
+            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
+            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+
+            if (identity != null)
+            {
+                if (superAdmin == 1 || isTeacher == 1)
                 {
-                    string msg = ClassServices.InsertorUpdateToDB(id, oClientRequestInfo, out Class classs);
+                    string msg = AttendanceServices.InsertorUpdateToDB(id, oClientRequestInfo, out Attendance attendance);
                     if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
 
-                    return classs.ToResultOk();
+                    return attendance.ToResultOk();
                 }
                 else
                 {
@@ -140,8 +171,8 @@ namespace ApiTest2.Controllers
         #region xóa thông tin chức vụ
         //[Authorize]
         [HttpDelete]
-        [Route("delete/{classcode:length(6)}")]
-        public Result ClassDelete(string classcode)
+        [Route("delete/{id:int)}")]
+        public Result AttendanceDelete(int id)
         {
             var identity = User.Identity as ClaimsIdentity;
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
@@ -151,13 +182,13 @@ namespace ApiTest2.Controllers
             {
                 if (superAdmin == 1 || isTeacher == 1)
                 {
-                    string msg = Class.GetOneClassByClassCode(classcode, out Class classs);
-                    if (msg.Length > 0) msg.ToMNFResultError("GetOneClassByClassCode", new { classcode });
+                    string msg = Attendance.GetOneAttendanceByID(id, out Attendance attendance);
+                    if (msg.Length > 0) msg.ToMNFResultError("GetOneAttendanceByID", new { attendance });
 
                     BSS.DBM dbm = new BSS.DBM();
                     dbm.BeginTransac();
 
-                    msg = ClassServices.DoDelete(dbm, classcode, classs);
+                    msg = AttendanceServices.DoDelete(dbm, id, attendance);
                     if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
 
                     dbm.CommitTransac();

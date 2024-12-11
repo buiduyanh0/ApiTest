@@ -17,7 +17,7 @@ namespace ApiTest2.Controllers
     {
         // GET: ClassRegistration
         #region lấy dữ liệu đăng ký môn học
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("")]
         public Result GetList()
@@ -52,7 +52,7 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region lấy dữ liệu các sinh viên đã đăng ký môn học
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("{classcode:length(6)}")]
         public Result GetListClassStudent(string classcode)
@@ -75,7 +75,7 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region lấy dữ liệu môn học của sinh viên
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("{studentcode:length(8)}")]
         public Result GetOneClassRegistration(string studentcode, string classcode)
@@ -98,7 +98,7 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region add thông tin đăng ký môn học
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [Route("edit/{id:int}")]
         public Result ClassRegistrationAddorUpdate(int id, ClassRegistrationServices.ClassRegistrationAddorUpdateInfo oClientRequestInfo)
@@ -144,9 +144,9 @@ namespace ApiTest2.Controllers
         //#endregion
 
         #region xóa thông tin đăng ký
-        [Authorize]
+        //[Authorize]
         [HttpDelete]
-        [Route("delete/{studentcode:string}")]
+        [Route("delete/{studentcode:length(8)}")]
         public Result ClassRegistrationtDelete(string studentcode, string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;

@@ -17,7 +17,7 @@ namespace ApiTest2.Controllers
     {
         // GET: Subject
         #region lấy dữ liệu môn học
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("")]
         public Result GetList()
@@ -53,7 +53,7 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region lấy dữ liệu học phần theo ID
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("{subjectcode:length(6)}")]
         public Result GetOneSubject(string subjectcode)
@@ -79,7 +79,7 @@ namespace ApiTest2.Controllers
         #endregion
 
         #region add thông tin môn học mới
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [Route("edit/{id:int}")]
         public Result SupjectAddorUpdate(int id, SubjectServices.SubjectAddorUpdateInfo oClientRequestInfo)
@@ -126,9 +126,9 @@ namespace ApiTest2.Controllers
         //#endregion
 
         #region xóa thông tin môn học
-        [Authorize]
+        //[Authorize]
         [HttpDelete]
-        [Route("delete/{supjectcode:string}")]
+        [Route("delete/{supjectcode:length(6)}")]
         public Result SubjectDelete(string subjectcode)
         {
             var identity = User.Identity as ClaimsIdentity;

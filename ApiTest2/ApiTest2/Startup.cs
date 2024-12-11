@@ -15,6 +15,23 @@ namespace ApiTest2
     {
         public void Configuration(IAppBuilder app)
         {
+            app.UseWhen(
+                context => !context.Request.Path.StartsWithSegments(new PathString("/swagger")),
+                    appBuilder =>
+                    {
+                        appBuilder.UseJwtBearerAuthentication(new JwtBearerOptions
+                        {
+                            TokenValidationParameters = new TokenValidationParameters
+                            {
+                                ValidateIssuer = true,
+                                ValidateAudience = true,
+                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSecretKey"))
+                            }
+                    });
+            });
+
+            // Other middleware (e.g., MVC routing, Swagger, etc.)
+            
             // Configure OAuth
             var oauthOptions = new OAuthAuthorizationServerOptions
             {
@@ -24,6 +41,11 @@ namespace ApiTest2
                 Provider = new SimpleAuthorizationServerProvider()
             };
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
             app.UseOAuthAuthorizationServer(oauthOptions);
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
 
