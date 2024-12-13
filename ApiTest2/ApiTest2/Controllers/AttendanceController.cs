@@ -125,7 +125,7 @@ namespace ApiTest2.Controllers
         //[Authorize]
         [HttpPost]
         [Route("edit/{id:int}")]
-        public Result AttendanceAddorUpdate(int id, AttentdanceServices.AttentdanceAddorUpdateInfo oClientRequestInfo)
+        public Result AttendanceAddorUpdate(int id, AttendanceServices.AttendanceAddorUpdateInfo oClientRequestInfo)
         {
             var identity = User.Identity as ClaimsIdentity;
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
