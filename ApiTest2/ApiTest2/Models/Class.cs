@@ -10,9 +10,9 @@ namespace ApiTest2.Models
     {
         public int ClassId { get; set; }
         public string ClassCode { get; set; }
-        public int SubjectCode { get; set; }
-        public int Semester { get; set; }
-        public int TeacherId { get; set; }
+        public string SubjectCode { get; set; }
+        public string Semester { get; set; }
+        public string TeacherId { get; set; }
         public Guid ObjectGUID { get; set; }
         public int IsActive { get; set; }
 

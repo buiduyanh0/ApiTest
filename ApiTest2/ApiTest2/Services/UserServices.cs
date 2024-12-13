@@ -60,8 +60,8 @@ namespace ApiTest2.Services
             public DateTime Birthday { get; set; }
             public string Email { get; set; }
             public string NumberPhone { get; set; }
-            public int IsTeacher { get; set; }
-            public int SuperAdmin { get; set; }
+            public byte IsTeacher { get; set; }
+            public byte SuperAdmin { get; set; }
             public Guid ObjectGUID { get; set; }
             public DateTime CreatedTime { get; set; }
             public DateTime UpdatedTime { get; set; }

@@ -17,8 +17,8 @@ namespace ApiTest2.Models
         public DateTime Birthday { get; set; }
         public string Email { get; set; }
         public string NumberPhone { get; set; }
-        public int IsTeacher { get; set; }
-        public int SuperAdmin { get; set; }
+        public byte IsTeacher { get; set; }
+        public byte SuperAdmin { get; set; }
         public Guid ObjectGUID { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime UpdatedTime { get; set; }
@@ -75,7 +75,7 @@ namespace ApiTest2.Models
             //    msg = dbm.GetOne(out documentCCS);
             //    return msg;
             //}
-            msg = DBM.GetOne("usp_User_GetOne", new { ID }, out user);
+            msg = DBM.GetOne("usp_User_GetOneByID", new { ID }, out user);
             if (msg.Length > 0) return msg;
             return msg;
         }
