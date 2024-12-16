@@ -9,8 +9,8 @@ namespace ApiTest2.Models
     public class Grade
     {
         public int GradeId { get; set; }
-        public int ClassCode { get; set; }
-        public int StudentCode { get; set; }
+        public string ClassCode { get; set; }
+        public string StudentCode { get; set; }
         public int Score { get; set; }
         public DateTime UpdateTime { get; set; }
         public Guid ObjectGUID { get; set; }
@@ -18,7 +18,7 @@ namespace ApiTest2.Models
 
         public static string GetAllGradeByClassCode(string classcode, out List<Grade> lstgrade)
         {
-            return DBM.GetList("usp_Grade_GetAllGradeByStudentCode", new { classcode }, out lstgrade);
+            return DBM.GetList("usp_Grade_GetAllGradeByClassCode", new { classcode }, out lstgrade);
         }
         public static string GetAllGradeByStudentCode(string studentcode,out List<Grade> lstgrade)
         {

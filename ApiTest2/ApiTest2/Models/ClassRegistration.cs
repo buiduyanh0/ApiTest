@@ -24,6 +24,10 @@ namespace ApiTest2.Models
         {
             return DBM.GetList("usp_ClassRegistration_GetAllByClassCode", new { classcode }, out lstclassRegistration);
         }
+        public static string GetAllStudentRegistedClass(string studentcode, out List<ClassRegistration> lstclassRegistration)
+        {
+            return DBM.GetList("usp_ClassRegistration_GetAllStudentRegistedClass", new { studentcode }, out lstclassRegistration);
+        }
         public string InsertorUpdate(BSS.DBM dbm)
         {
             string msg = "";
@@ -49,7 +53,7 @@ namespace ApiTest2.Models
             //    msg = dbm.GetOne(out documentCCS);
             //    return msg;
             //}
-            msg = DBM.GetOne("usp_ClassRegistration_GetOneByCode", new { id }, out classRegistation);
+            msg = DBM.GetOne("usp_ClassRegistration_GetOneByID", new { id }, out classRegistation);
             if (msg.Length > 0) return msg;
             return msg;
         }

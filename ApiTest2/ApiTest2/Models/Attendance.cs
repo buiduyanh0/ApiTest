@@ -66,7 +66,7 @@ namespace ApiTest2.Models
             if (msg.Length > 0) return msg;
             return msg;
         }
-        public static string GetAllAttendanceByStudentCode(string studentcode, out Attendance attendance)
+        public static string GetAllAttendanceByStudentCode(string studentcode, string classcode, out Attendance attendance)
         {
             string msg = "";
             //using (BSS.DBM dbm = new DBM())
@@ -75,7 +75,7 @@ namespace ApiTest2.Models
             //    msg = dbm.GetOne(out documentCCS);
             //    return msg;
             //}
-            msg = DBM.GetOne("usp_Attendance_GetOneByStudentCode", new { studentcode }, out attendance);
+            msg = DBM.GetOne("usp_Attendance_GetOneByStudentCode", new { studentcode, classcode }, out attendance);
             if (msg.Length > 0) return msg;
             return msg;
         }

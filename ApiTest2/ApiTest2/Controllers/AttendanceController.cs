@@ -99,7 +99,7 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu điểm danh theo sinh viên
         [HttpGet]
         [Route("{classcode:length(6)}")]
-        public Result GetAllAttendanceByStudentCode(string studentcode)
+        public Result GetAllAttendanceByStudentCode(string studentcode, string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;
             byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
@@ -107,7 +107,7 @@ namespace ApiTest2.Controllers
 
             if (identity != null)
             {
-                string msg = ApiTest2.Models.Attendance.GetAllAttendanceByStudentCode(studentcode, out Attendance attendance);
+                string msg = ApiTest2.Models.Attendance.GetAllAttendanceByStudentCode(studentcode, classcode, out Attendance attendance);
                 if (msg.Length > 0) return msg.ToMNFResultError("GetAllAttendanceByStudentCode", new { studentcode });
 
                 return attendance.ToResultOk();

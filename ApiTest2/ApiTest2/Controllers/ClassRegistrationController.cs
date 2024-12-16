@@ -51,7 +51,7 @@ namespace ApiTest2.Controllers
         }
         #endregion
 
-        #region lấy dữ liệu các sinh viên đã đăng ký môn học
+        #region lấy dữ liệu các sinh viên đã đăng ký lớp học
         //[Authorize]
         [HttpGet]
         [Route("{classcode:length(6)}")]
@@ -74,7 +74,30 @@ namespace ApiTest2.Controllers
         }
         #endregion
 
-        #region lấy dữ liệu môn học của sinh viên
+        #region lấy dữ liệu các lớp học sinh viên đã đăng ký
+        //[Authorize]
+        [HttpGet]
+        [Route("{classcode:length(6)}")]
+        public Result GetListClassRegistedByStudent(string studentcode)
+        {
+            var identity = User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                string msg = ClassRegistration.GetAllStudentRegistedClass(studentcode, out List<ClassRegistration> lstregistration);
+                if (msg.Length > 0) return msg.ToMNFResultError("GetAllClassRegistrationByClassCode");
+
+                return lstregistration.ToResultOk();
+            }
+            else
+            {
+                string msg = "Bạn cần đăng nhập!";
+
+                return Result.GetResultError(msg);
+            }
+        }
+        #endregion
+
+        #region lấy dữ liệu lớp học của sinh viên đã đăng ký
         //[Authorize]
         [HttpGet]
         [Route("{studentcode:length(8)}")]
