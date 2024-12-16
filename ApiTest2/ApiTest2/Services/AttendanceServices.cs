@@ -49,10 +49,10 @@ namespace ApiTest2.Services
 
             dbm.CommitTransac();
 
-            msg = Attendance.GetOneAttendanceByID(id, out Attendance attendance1);
+            msg = Attendance.GetOneAttendanceByObjectGuid(attendance.ObjectGuid, out Attendance attendance1);
             if (msg.Length > 0) return msg;
 
-            msg = Log.WriteHistoryLog(attendance.AttendanceId == 0 ? "thêm mới" : "sửa lớp học", attendance1.ObjectGuid, 0, "", 0);
+            msg = Log.WriteHistoryLog(attendance.AttendanceId == 0 ? "thêm mới" : "sửa lớp học", attendance.ObjectGuid, 0, "", 0);
             return msg;
         }
 

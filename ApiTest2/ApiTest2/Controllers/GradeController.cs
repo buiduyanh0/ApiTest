@@ -20,15 +20,22 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu điểm theo mã lớp
         //[Authorize]
         [HttpGet]
-        [Route("{classcode:length(6)}")]
+        [Route("{classcode}")]
         public Result GetListByClassCode(string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (identity != null)
             {
-                if (superAdmin == 1 || isTeacher == 1)
+                if (superAdmin || isTeacher)
                 {
                     string msg = Grade.GetAllGradeByClassCode(classcode, out List<Grade> lstgrade);
                     if (msg.Length > 0) return msg.ToMNFResultError("GetAllGradeByStudentCode");
@@ -54,12 +61,19 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu điểm theo mssv
         //[Authorize]
         [HttpGet]
-        [Route("{studentcode:length(8)}")]
+        [Route("{studentcode}")]
         public Result GetListGradeByStudentCode(string studentcode)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (identity != null)
             {
                 string msg = Grade.GetAllGradeByStudentCode(studentcode, out List<Grade> lstgrade);
@@ -79,12 +93,19 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu điểm của môn học theo MSSV
         //[Authorize]
         [HttpGet]
-        [Route("{studentcode:length(8)}")]
+        [Route("{classcode}/{studentcode}")]
         public Result GetOneGradeByStudentCode(string classcode, string studentcode)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (identity != null)
             {
                 string msg = ApiTest2.Models.Grade.GetOneGradeByCode(classcode, studentcode, out Grade grade);
@@ -108,11 +129,18 @@ namespace ApiTest2.Controllers
         public Result GradeAddorUpdate(int id, GradeServices.GradeAddorUpdateInfo oClientRequestInfo)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (identity != null)
             {
-                if (superAdmin == 1 || isTeacher == 1)
+                if (superAdmin || isTeacher)
                 {
                     string msg = GradeServices.InsertorUpdateToDB(id, oClientRequestInfo, out Grade grade);
                     if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
@@ -150,15 +178,22 @@ namespace ApiTest2.Controllers
         #region xóa thông tin điểm
         //[Authorize]
         [HttpDelete]
-        [Route("delete/{studentcode:length(8)}")]
+        [Route("delete/{classcode}/{studentcode}")]
         public Result GradeDelete(string studentcode, string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (identity != null)
             {
-                if (superAdmin == 1 || isTeacher == 1)
+                if (superAdmin || isTeacher)
                 {
                     string msg = Grade.GetOneGradeByCode(studentcode, classcode, out Grade grade);
                     if (msg.Length > 0) msg.ToMNFResultError("GetOnePhongBanByID", new { studentcode, classcode });

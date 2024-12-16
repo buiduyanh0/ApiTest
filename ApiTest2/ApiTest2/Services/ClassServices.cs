@@ -21,11 +21,10 @@ namespace ApiTest2.Services
 
         public class ClassAddorUpdateInfo
         {
-            public int ClassId { get; set; }
             public string ClassCode { get; set; }
-            public int SubjectCode { get; set; }
-            public int Semester { get; set; }
-            public int TeacherId { get; set; }
+            public string SubjectCode { get; set; }
+            public string Semester { get; set; }
+            public string TeacherId { get; set; }
             public int IsActive { get; set; }
             public Guid ObjectGuid { get; set; }
         }
@@ -50,7 +49,7 @@ namespace ApiTest2.Services
 
             dbm.CommitTransac();
 
-            msg = Class.GetOneClassByID(id, out Class classs1);
+            msg = Class.GetOneClassByClassCode(oClientRequestInfo.ClassCode, out Class classs1);
             if (msg.Length > 0) return msg;
 
             msg = Log.WriteHistoryLog(classs.ClassId == 0 ? "thêm mới" : "sửa lớp học", classs1.ObjectGUID, 0, "", 0);

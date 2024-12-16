@@ -23,12 +23,18 @@ namespace ApiTest2.Controllers
         public Result GetList()
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
-                if (superAdmin == 1)
+                if (superAdmin)
                 {
                     string msg = Subject.GetAllSubject(out List<Subject> lstsubject);
                     if (msg.Length > 0) return msg.ToMNFResultError("GetAllSubject");
@@ -55,12 +61,18 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu học phần theo ID
         //[Authorize]
         [HttpGet]
-        [Route("{subjectcode:length(6)}")]
+        [Route("{subjectcode}")]
         public Result GetOneSubject(string subjectcode)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
@@ -85,12 +97,18 @@ namespace ApiTest2.Controllers
         public Result SupjectAddorUpdate(int id, SubjectServices.SubjectAddorUpdateInfo oClientRequestInfo)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
-                if (superAdmin == 1)
+                if (superAdmin)
                 {
                     string msg = SubjectServices.InsertorUpdateToDB(id, oClientRequestInfo, out Subject subject);
                     if (msg.Length > 0) return msg.ToMNFResultError("InserorUpdatetToDB", new { oClientRequestInfo });
@@ -128,16 +146,22 @@ namespace ApiTest2.Controllers
         #region xóa thông tin môn học
         //[Authorize]
         [HttpDelete]
-        [Route("delete/{supjectcode:length(6)}")]
+        [Route("delete/{supjectcode}")]
         public Result SubjectDelete(string subjectcode)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
-                if (superAdmin == 1)
+                if (superAdmin)
                 {
                     string msg = Subject.GetOneSubjectByCode(subjectcode, out Subject subject);
                     if (msg.Length > 0) msg.ToMNFResultError("GetOneSubjectByCode", new { subjectcode });

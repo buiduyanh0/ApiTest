@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -12,6 +13,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Web.Http;
 using System.Windows.Interop;
+using static ApiTest2.Services.UserServices;
 
 namespace ApiTest2.Controllers
 {
@@ -19,10 +21,17 @@ namespace ApiTest2.Controllers
     public class UserController : ApiController
     {
         #region login
+        [AllowAnonymous]
         [HttpGet]
         [Route("login")]
-        public Result Login(UserServices.UserLoginInfo oClientRequestInfo)
+        public Result Login([FromUri] string userName, [FromUri] string pwd)
         {
+            var oClientRequestInfo = new UserLoginInfo
+            {
+                UserName = userName,
+                pwd = pwd
+            };
+
             string msg = UserServices.CheckLogin(oClientRequestInfo, out string token);
             if (msg.Length > 0) return msg.ToResultError();
 
@@ -36,12 +45,17 @@ namespace ApiTest2.Controllers
         public Result GetList()
         {
             var identity = User.Identity as ClaimsIdentity;
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
             string username = identity.FindFirst(ClaimTypes.Name)?.Value;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (identity != null)
             {
-                if (superAdmin == 1 || isTeacher == 1)
+                if (superAdmin || isTeacher)
                 {
                     string msg = ApiTest2.Models.User.GetAllUser(out List<User> lstuser);
                     if (msg.Length > 0) return msg.ToMNFResultError("GetAllUser");
@@ -54,7 +68,7 @@ namespace ApiTest2.Controllers
 
                     return Result.GetResultError(msg);
                 }
-            } 
+            }
             else
             {
                 string msg = "Bạn cần đăng nhập";
@@ -67,15 +81,20 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu người dùng theo ID
         //[Authorize]
         [HttpGet]
-        [Route("{username:length(8)}")]
+        [Route("{username}")]
         public Result GetOneUser(string username)
         {
             var identity = User.Identity as ClaimsIdentity;
-            username = identity.FindFirst(ClaimTypes.Name)?.Value;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
 
-            if (superAdmin == 1 || isTeacher == 1)
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string usernamelogin = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (superAdmin || isTeacher)
             {
                 string msg = ApiTest2.Models.User.GetOneUserByUserName(username, out User user);
                 if (msg.Length > 0) return msg.ToMNFResultError("GetOneUserByUserName", new { username });
@@ -98,12 +117,18 @@ namespace ApiTest2.Controllers
         public Result UserAddorUpdate(int id, UserServices.UserAddorUpdateInfo oClientRequestInfo)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
-                if (superAdmin == 1)
+                if (superAdmin)
                 {
                     string msg = UserServices.InsertorUpdateToDB(id, oClientRequestInfo, out User user);
                     if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
@@ -116,14 +141,14 @@ namespace ApiTest2.Controllers
 
                     return Result.GetResultError(msg);
                 }
-            } 
+            }
             else
             {
                 string msg = "Bạn cần đăng nhập";
 
                 return Result.GetResultError(msg);
             }
-            
+
         }
         #endregion
 
@@ -146,12 +171,18 @@ namespace ApiTest2.Controllers
         public Result UserDelete(int id)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
-                if (superAdmin == 1)
+                if (superAdmin)
                 {
                     string msg = ApiTest2.Models.User.GetOneUserByID(id, out User user);
                     if (msg.Length > 0) return msg.ToMNFResultError("GetOneUserByID", new { id });
@@ -172,7 +203,7 @@ namespace ApiTest2.Controllers
 
                     return Result.GetResultError(msg);
                 }
-            } 
+            }
             else
             {
                 string msg = "Bạn cần đăng nhập";

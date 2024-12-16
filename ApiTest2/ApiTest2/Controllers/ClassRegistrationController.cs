@@ -8,12 +8,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
 
 namespace ApiTest2.Controllers
 {
     [RoutePrefix("api/classregistration")]
-    public class ClassRegistrationController : Controller
+    public class ClassRegistrationController : ApiController
     {
         // GET: ClassRegistration
         #region lấy dữ liệu đăng ký môn học
@@ -23,12 +23,18 @@ namespace ApiTest2.Controllers
         public Result GetList()
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
-                if (superAdmin == 1 || isTeacher == 1)
+                if (superAdmin || isTeacher)
                 {
                     string msg = ClassRegistration.GetAllClassRegistration(out List<ClassRegistration> lstregistration);
                     if (msg.Length > 0) return msg.ToMNFResultError("GetAllClassRegistration");
@@ -54,10 +60,19 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu các sinh viên đã đăng ký lớp học
         //[Authorize]
         [HttpGet]
-        [Route("{classcode:length(6)}")]
+        [Route("{classcode}")]
         public Result GetListClassStudent(string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (identity != null)
             {
                 string msg = ClassRegistration.GetAllClassRegistrationByClassCode(classcode, out List<ClassRegistration> lstregistration);
@@ -77,10 +92,19 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu các lớp học sinh viên đã đăng ký
         //[Authorize]
         [HttpGet]
-        [Route("{classcode:length(6)}")]
+        [Route("{studentcode}")]
         public Result GetListClassRegistedByStudent(string studentcode)
         {
             var identity = User.Identity as ClaimsIdentity;
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (identity != null)
             {
                 string msg = ClassRegistration.GetAllStudentRegistedClass(studentcode, out List<ClassRegistration> lstregistration);
@@ -100,10 +124,19 @@ namespace ApiTest2.Controllers
         #region lấy dữ liệu lớp học của sinh viên đã đăng ký
         //[Authorize]
         [HttpGet]
-        [Route("{studentcode:length(8)}")]
-        public Result GetOneClassRegistration(string studentcode, string classcode)
+        [Route("{classcode}/{studentcode}")]
+        public Result GetOneClassRegistration(string classcode, string studentcode)
         {
             var identity = User.Identity as ClaimsIdentity;
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (identity != null)
             {
                 string msg = ApiTest2.Models.ClassRegistration.GetOneRegistrationByStudentCode(studentcode, classcode, out ClassRegistration classRegistation);
@@ -127,11 +160,18 @@ namespace ApiTest2.Controllers
         public Result ClassRegistrationAddorUpdate(int id, ClassRegistrationServices.ClassRegistrationAddorUpdateInfo oClientRequestInfo)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (identity != null)
             {
-                if (superAdmin != 1 && isTeacher != 1)
+                if (!superAdmin && !isTeacher)
                 {
                     string msg = ClassRegistrationServices.InsertorUpdateToDB(id, oClientRequestInfo, out ClassRegistration classRegistration);
                     if (msg.Length > 0) return msg.ToMNFResultError("InserorUpdatetToDB", new { oClientRequestInfo });
@@ -169,19 +209,28 @@ namespace ApiTest2.Controllers
         #region xóa thông tin đăng ký
         //[Authorize]
         [HttpDelete]
-        [Route("delete/{studentcode:length(8)}")]
-        public Result ClassRegistrationtDelete(string studentcode, string classcode)
+        [Route("delete/{classcode}/{studentcode}")]
+        public Result ClassRegistrationtDelete(string classcode, string studentcode)
         {
             var identity = User.Identity as ClaimsIdentity;
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             if (identity != null)
             {
-                string msg = ClassRegistration.GetOneRegistrationByStudentCode(studentcode, classcode, out ClassRegistration classRegistration);
+                string msg = ClassRegistration.GetOneRegistrationByStudentCode(classcode, studentcode, out ClassRegistration classRegistration);
                 if (msg.Length > 0) msg.ToMNFResultError("GetOneClassRegistrationByCode", new { studentcode, classcode });
 
                 BSS.DBM dbm = new BSS.DBM();
                 dbm.BeginTransac();
 
-                msg = ClassRegistrationServices.DoDelete(dbm, studentcode, classcode, classRegistration);
+                msg = ClassRegistrationServices.DoDelete(dbm, classcode, studentcode, classRegistration);
                 if (msg.Length > 0) { dbm.RollBackTransac(); return Log.ProcessError(msg).ToResultError(); }
 
                 dbm.CommitTransac();

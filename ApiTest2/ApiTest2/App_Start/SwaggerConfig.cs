@@ -5,6 +5,11 @@ using Swashbuckle.Application;
 using System;
 using System.Reflection;
 using System.IO;
+using Swashbuckle.Swagger;
+using System.Collections.Generic;
+using Swashbuckle.AspNetCore.Filters;
+using Microsoft.OpenApi.Models;
+using System.Web.Http.Description;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
@@ -39,6 +44,17 @@ namespace ApiTest2
                         // additional fields by chaining methods off SingleApiVersion.
                         //
                         c.SingleApiVersion("v1", "ApiTest2");
+
+                        // Apply the security definition to all API endpoints
+                        c.ApiKey("Bearer")
+                        .Description("JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {your-token}\"")
+                        .Name("Authorization")
+                        .In("header");
+
+                        // Apply security globally to all operations
+                        c.OperationFilter<AddAuthorizationHeaderParameterOperationFilter>();
+                        //// Apply security globally to all endpoints
+                        //c.OperationFilter<AddAuthorizationHeaderParameterOperationFilter>();
 
                         // If you want the output Swagger docs to be indented properly, enable the "PrettyPrint" option.
                         //
@@ -185,6 +201,7 @@ namespace ApiTest2
                     })
                 .EnableSwaggerUi(c =>
                     {
+                        c.EnableOAuth2Support("client_id", "client_secret", "Swagger API");
                         // Use the "DocumentTitle" option to change the Document title.
                         // Very helpful when you have multiple Swagger pages open, to tell them apart.
                         //
@@ -256,6 +273,26 @@ namespace ApiTest2
                         //
                         //c.EnableApiKeySupport("apiKey", "header");
                     });
+        }
+    }
+
+    public class AddAuthorizationHeaderParameterOperationFilter : IOperationFilter
+    {
+        public void Apply(Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
+        {
+            if (operation.parameters == null)
+            {
+                operation.parameters = new List<Parameter>();
+            }
+
+            operation.parameters.Add(new Parameter
+            {
+                name = "Authorization",
+                @in = "header",
+                description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {your-token}\"",
+                required = false,  // Make this true if the header is required
+                type = "string"
+            });
         }
     }
 }

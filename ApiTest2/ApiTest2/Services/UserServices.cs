@@ -37,7 +37,7 @@ namespace ApiTest2.Services
             // Generate the JWT token after successful login
             token = GenerateJwtToken(user);
 
-            return token;
+            return "";
         }
 
         public static string DoDelete(DBM dbm, int id, User user)
@@ -52,7 +52,6 @@ namespace ApiTest2.Services
 
         public class UserAddorUpdateInfo
         {
-            public int UserID { get; set; }
             public string UserName { get; set; }
             public string pwd { get; set; }
             public string Name { get; set; }
@@ -60,11 +59,8 @@ namespace ApiTest2.Services
             public DateTime Birthday { get; set; }
             public string Email { get; set; }
             public string NumberPhone { get; set; }
-            public byte IsTeacher { get; set; }
-            public byte SuperAdmin { get; set; }
-            public Guid ObjectGUID { get; set; }
-            public DateTime CreatedTime { get; set; }
-            public DateTime UpdatedTime { get; set; }
+            public bool IsTeacher { get; set; }
+            public bool SuperAdmin { get; set; }
             public int IsActive { get; set; }
         }
         public static string InsertorUpdateToDB(int id, UserAddorUpdateInfo oClientRequestInfo, out User user)
@@ -80,6 +76,7 @@ namespace ApiTest2.Services
                 PasswordSalt = pwdSalt,
                 GioiTinh = oClientRequestInfo.GioiTinh,
                 IsActive = oClientRequestInfo.IsActive,
+                IsTeacher = oClientRequestInfo.IsTeacher,
                 SuperAdmin = oClientRequestInfo.SuperAdmin,
                 ObjectGUID = Guid.NewGuid(),
                 Birthday = oClientRequestInfo.Birthday,
@@ -95,7 +92,7 @@ namespace ApiTest2.Services
 
             dbm.CommitTransac();
 
-            msg = User.GetOneUserByID(id, out User user1);
+            msg = User.GetOneUserByUserName(oClientRequestInfo.UserName, out User user1);
             if (msg.Length > 0) return msg;
 
             msg = Log.WriteHistoryLog(user.UserID == 0 ? "thêm mới user" : "sửa user", user1.ObjectGUID, 0, "", 0);
@@ -172,7 +169,7 @@ namespace ApiTest2.Services
         #region token generate
         private static string GenerateJwtToken(User user)
         {
-            string secretKey = ConfigurationManager.AppSettings["JwtSecretKey"];
+            var secretKey = "L40/p+SbAVQGchV1pOY2qxaydhYfB0MNvZlSfwB9Kd2vxbdfHrGuPfEHRkD0CeIy\r\n";
             // Define key and signing credentials
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)); // Replace with a secure key
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -185,6 +182,12 @@ namespace ApiTest2.Services
                 new Claim("IsTeacher", user.IsTeacher.ToString()),            // Custom claim: Teacher
                 new Claim("SuperAdmin", user.SuperAdmin.ToString())
             };
+
+            var identity = new ClaimsIdentity(claims, "CustomAuth");
+
+            // Set authentication cookie or token
+            var principal = new ClaimsPrincipal(identity);
+            HttpContext.Current.User = principal;
 
             // Create the token
             var token = new JwtSecurityToken(

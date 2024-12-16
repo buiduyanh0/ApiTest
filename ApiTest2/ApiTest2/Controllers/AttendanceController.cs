@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
 
 namespace ApiTest2.Controllers
 {
     [RoutePrefix("api/attendance")]
-    public class AttendanceController : Controller
+    public class AttendanceController : ApiController
     {
         #region lấy dữ liệu điểm danh
         //[Authorize]
@@ -21,12 +21,18 @@ namespace ApiTest2.Controllers
         public Result GetList()
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
-                if (superAdmin == 1 || isTeacher == 1)
+                if (superAdmin || isTeacher)
                 {
                     string msg = Attendance.GetAllAttendance(out List<Attendance> lstattendance);
                     if (msg.Length > 0) return msg.ToMNFResultError("GetAllAttendance");
@@ -64,16 +70,22 @@ namespace ApiTest2.Controllers
 
         #region lấy dữ liệu điểm danh theo lớp học
         [HttpGet]
-        [Route("{classcode:length(6)}")]
+        [Route("{classcode}")]
         public Result GetAllAttendanceByClassCode(string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
-                if (superAdmin == 1 || isTeacher == 1)
+                if (superAdmin || isTeacher)
                 {
                     string msg = ApiTest2.Models.Attendance.GetAllAttendanceByClassCode(classcode, out Attendance attendance);
                     if (msg.Length > 0) return msg.ToMNFResultError("GetAllAttendanceByClassCode", new { classcode });
@@ -98,12 +110,18 @@ namespace ApiTest2.Controllers
 
         #region lấy dữ liệu điểm danh theo sinh viên
         [HttpGet]
-        [Route("{classcode:length(6)}")]
+        [Route("{classcode}/{studentcode}")]
         public Result GetAllAttendanceByStudentCode(string studentcode, string classcode)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
@@ -128,12 +146,18 @@ namespace ApiTest2.Controllers
         public Result AttendanceAddorUpdate(int id, AttendanceServices.AttendanceAddorUpdateInfo oClientRequestInfo)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
-                if (superAdmin == 1 || isTeacher == 1)
+                if (superAdmin || isTeacher)
                 {
                     string msg = AttendanceServices.InsertorUpdateToDB(id, oClientRequestInfo, out Attendance attendance);
                     if (msg.Length > 0) return msg.ToMNFResultError("InsertorUpdateToDB", new { oClientRequestInfo });
@@ -175,12 +199,18 @@ namespace ApiTest2.Controllers
         public Result AttendanceDelete(int id)
         {
             var identity = User.Identity as ClaimsIdentity;
-            byte isTeacher = Convert.ToByte(identity.FindFirst("IsTeacher")?.Value); // Convert back to byte
-            byte superAdmin = Convert.ToByte(identity.FindFirst("SuperAdmin")?.Value); // Convert back to byte
+            string isTeacherString = identity.FindFirst("IsTeacher")?.Value;
+            bool isTeacher = bool.TryParse(isTeacherString, out bool resultIsTeacher) ? resultIsTeacher : false;
+
+            string superAdminString = identity.FindFirst("SuperAdmin")?.Value;
+            bool superAdmin = bool.TryParse(superAdminString, out bool resultSuperAdmin) ? resultSuperAdmin : false;
+
+            string username = identity.FindFirst(ClaimTypes.Name)?.Value;
+            string userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (identity != null)
             {
-                if (superAdmin == 1 || isTeacher == 1)
+                if (superAdmin || isTeacher)
                 {
                     string msg = Attendance.GetOneAttendanceByID(id, out Attendance attendance);
                     if (msg.Length > 0) msg.ToMNFResultError("GetOneAttendanceByID", new { attendance });

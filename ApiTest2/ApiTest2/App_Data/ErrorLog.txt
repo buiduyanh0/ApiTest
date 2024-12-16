@@ -1,0 +1,10 @@
+Error: A route named 'swagger_docsswagger/docs/{apiVersion}' is already in the route collection. Route names must be unique.
+Parameter name: name
+StackTrace:    at System.Web.Routing.RouteCollection.Add(String name, RouteBase item)
+   at System.Web.Http.HttpRouteCollectionExtensions.MapHttpRoute(HttpRouteCollection routes, String name, String routeTemplate, Object defaults, Object constraints, HttpMessageHandler handler)
+   at Swashbuckle.Application.HttpConfigurationExtensions.EnableSwagger(HttpConfiguration httpConfig, String routeTemplate, Action`1 configure)
+   at ApiTest2.SwaggerConfig.Register() in D:\Working\ApiTest2\ApiTest2\ApiTest2\App_Start\SwaggerConfig.cs:line 22
+   at ApiTest2.WebApiConfig.Register(HttpConfiguration config) in D:\Working\ApiTest2\ApiTest2\ApiTest2\App_Start\WebApiConfig.cs:line 17
+   at System.Web.Http.GlobalConfiguration.Configure(Action`1 configurationCallback)
+   at ApiTest2.WebApiApplication.Application_Start() in D:\Working\ApiTest2\ApiTest2\ApiTest2\Global.asax.cs:line 17
+Timestamp: 16/12/2024 5:11:33 CH

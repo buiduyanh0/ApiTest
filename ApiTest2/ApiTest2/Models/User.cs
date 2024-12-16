@@ -17,8 +17,8 @@ namespace ApiTest2.Models
         public DateTime Birthday { get; set; }
         public string Email { get; set; }
         public string NumberPhone { get; set; }
-        public byte IsTeacher { get; set; }
-        public byte SuperAdmin { get; set; }
+        public bool IsTeacher { get; set; }
+        public bool SuperAdmin { get; set; }
         public Guid ObjectGUID { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime UpdatedTime { get; set; }

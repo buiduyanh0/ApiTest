@@ -1,9 +1,12 @@
 ﻿using ApiTest2;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Jwt;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 using System;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -15,67 +18,35 @@ namespace ApiTest2
     {
         public void Configuration(IAppBuilder app)
         {
-            app.UseWhen(
-                context => !context.Request.Path.StartsWithSegments(new PathString("/swagger")),
-                    appBuilder =>
-                    {
-                        appBuilder.UseJwtBearerAuthentication(new JwtBearerOptions
-                        {
-                            TokenValidationParameters = new TokenValidationParameters
-                            {
-                                ValidateIssuer = true,
-                                ValidateAudience = true,
-                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSecretKey"))
-                            }
-                    });
-            });
-
-            // Other middleware (e.g., MVC routing, Swagger, etc.)
-            
-            // Configure OAuth
-            var oauthOptions = new OAuthAuthorizationServerOptions
-            {
-                AllowInsecureHttp = true, // Use HTTPS in production
-                TokenEndpointPath = new Microsoft.Owin.PathString("/token"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(30),
-                Provider = new SimpleAuthorizationServerProvider()
-            };
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
-            app.UseOAuthAuthorizationServer(oauthOptions);
-            app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
-
-            // Configure Web API
+            // Web API configuration and services
             HttpConfiguration config = new HttpConfiguration();
-            WebApiConfig.Register(config);
+
+            // Configure JWT Authentication
+            ConfigureAuth(config, app);
+
+            // Web API routes
+            config.MapHttpAttributeRoutes();
+
+            // Use Web API with Owin
             app.UseWebApi(config);
         }
-    }
 
-    public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider
-    {
-        public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
+        public void ConfigureAuth(HttpConfiguration config, IAppBuilder app)
         {
-            context.Validated(); // Validate all clients (can be customized)
-        }
+            var issuer = "your-issuer"; // Set your JWT issuer
+            var audience = "your-audience"; // Set your JWT audience
+            var secretKey = "L40/p+SbAVQGchV1pOY2qxaydhYfB0MNvZlSfwB9Kd2vxbdfHrGuPfEHRkD0CeIy"; // The secret key used to sign JWT tokens
 
-        public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
-        {
-            // Replace this with your user validation logic
-            if (context.UserName != "test" || context.Password != "password")
+            // Define JWT Bearer Authentication options
+            var jwtBearerAuthenticationOptions = new JwtBearerAuthenticationOptions
             {
-                context.SetError("invalid_grant", "The username or password is incorrect.");
-                return;
-            }
+                AuthenticationMode = AuthenticationMode.Active,
+                AllowedAudiences = new[] { audience },
+                IssuerSecurityKeyProviders = new[] { new SymmetricKeyIssuerSecurityKeyProvider(issuer, secretKey) }
+            };
 
-            var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-            identity.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
-
-            context.Validated(identity); // Generate the token
+            // Enable JWT Bearer Authentication
+            app.UseJwtBearerAuthentication(jwtBearerAuthenticationOptions);
         }
     }
 }

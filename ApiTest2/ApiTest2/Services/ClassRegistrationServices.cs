@@ -21,7 +21,6 @@ namespace ApiTest2.Services
 
         public class ClassRegistrationAddorUpdateInfo
         {
-            public int ClassRegistrationId { get; set; }
             public string ClassCode { get; set; }
             public string StudentCode { get; set; }
             public DateTime RegisterTime { get; set; }
@@ -47,10 +46,10 @@ namespace ApiTest2.Services
 
             dbm.CommitTransac();
 
-            msg = ClassRegistration.GetOneRegistrationByID(id, out ClassRegistration classRegistration1);
+            msg = ClassRegistration.GetOneRegistrationByStudentCode(oClientRequestInfo.StudentCode, oClientRequestInfo.ClassCode, out ClassRegistration classRegistration1);
             if (msg.Length > 0) return msg;
 
-            msg = Log.WriteHistoryLog(classRegistration.ClassRegistrationId == 0 ? "thêm mới" : "sửa lớp học", classRegistration1.ObjectGUID, 0, "", 0);
+            msg = Log.WriteHistoryLog(classRegistration.ClassRegistrationId == 0 ? "thêm mới" : "sửa lớp học", classRegistration.ObjectGUID, 0, "", 0);
             return msg;
         }
 

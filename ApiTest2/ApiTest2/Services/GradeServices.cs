@@ -21,9 +21,8 @@ namespace ApiTest2.Services
 
         public class GradeAddorUpdateInfo
         {
-            public int GradeId { get; set; }
-            public int ClassCode { get; set; }
-            public int StudentCode { get; set; }
+            public string ClassCode { get; set; }
+            public string StudentCode { get; set; }
             public int Score { get; set; }
             public Guid ObjectGUID { get; set; }
             public int IsActive { get; set; }
@@ -52,7 +51,7 @@ namespace ApiTest2.Services
             msg = Grade.GetOneGradeByID(id, out Grade grade1);
             if (msg.Length > 0) return msg;
 
-            msg = Log.WriteHistoryLog(grade.GradeId == 0 ? "thêm mới chức vụ" : "sửa chức vụ", grade1.ObjectGUID, 0, "", 0);
+            msg = Log.WriteHistoryLog(grade.GradeId == 0 ? "thêm mới chức vụ" : "sửa chức vụ", grade.ObjectGUID, 0, "", 0);
             return msg;
         }
 

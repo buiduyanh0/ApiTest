@@ -53,6 +53,19 @@ namespace ApiTest2.Models
             if (msg.Length > 0) return msg;
             return msg;
         }
+        public static string GetOneAttendanceByObjectGuid(Guid objectGuid, out Attendance attendance)
+        {
+            string msg = "";
+            //using (BSS.DBM dbm = new DBM())
+            //{
+            //    dbm.SetStoreNameAndParams("usp_tbl_DocumentCCS_GetOne", new { Document_Id });
+            //    msg = dbm.GetOne(out documentCCS);
+            //    return msg;
+            //}
+            msg = DBM.GetOne("usp_Attendance_GetOneByObjectGuid", new { objectGuid }, out attendance);
+            if (msg.Length > 0) return msg;
+            return msg;
+        }
         public static string GetAllAttendanceByClassCode(string classcode, out Attendance attendance)
         {
             string msg = "";

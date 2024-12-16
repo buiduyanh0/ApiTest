@@ -55,6 +55,19 @@ namespace ApiTest2.Models
             if (msg.Length > 0) return msg;
             return msg;
         }
+        public static string GetOneGradeByObjectGuid(Guid objectGuid, out Grade grade)
+        {
+            string msg = "";
+            //using (BSS.DBM dbm = new DBM())
+            //{
+            //    dbm.SetStoreNameAndParams("usp_tbl_DocumentCCS_GetOne", new { Document_Id });
+            //    msg = dbm.GetOne(out documentCCS);
+            //    return msg;
+            //}
+            msg = DBM.GetOne("usp_Grade_GetOneByObjectGuid", new { objectGuid }, out grade);
+            if (msg.Length > 0) return msg;
+            return msg;
+        }
         public static string GetOneGradeByCode(string studentcode, string classcode, out Grade grade)
         {
             string msg = "";

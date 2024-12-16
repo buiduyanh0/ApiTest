@@ -12,8 +12,10 @@ namespace ApiTest2
         {
             // Web API configuration and services
             // Add JWT Middleware
-            config.MessageHandlers.Add(new JwtMiddleware());
+            //config.MessageHandlers.Add(new JwtMiddleware());
+            config.Filters.Add(new AuthorizeAttribute());
 
+            //SwaggerConfig.Register();
             // Web API routes
             config.MapHttpAttributeRoutes();
 

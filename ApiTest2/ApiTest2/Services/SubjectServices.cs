@@ -21,7 +21,6 @@ namespace ApiTest2.Services
 
         public class SubjectAddorUpdateInfo
         {
-            public int SubjectId { get; set; }
             public string SubjectName { get; set; }
             public string SubjectCode { get; set; }
             public Guid ObjectGuid { get; set; }
@@ -46,7 +45,7 @@ namespace ApiTest2.Services
 
             dbm.CommitTransac();
 
-            msg = Subject.GetOneSubjectByID(id, out Subject supject1);
+            msg = Subject.GetOneSubjectByCode(oClientRequestInfo.SubjectCode, out Subject supject1);
             if (msg.Length > 0) return msg;
 
             msg = Log.WriteHistoryLog(subject.SubjectId == 0 ? "thêm mới môn học" : "sửa môn học", supject1.ObjectGUID, 0, "", 0);
